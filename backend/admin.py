@@ -6,8 +6,8 @@ from backend.models import Ponto, Tipo, Local, Conta
 
 class PontoAdmin(admin.ModelAdmin):
     form = PontoForm
-    list_display = ['valor', 'periodo', 'conta', 'observacoes']
-    list_filter = ['conta', 'data_hora_atualizacao', 'data_hora_criacao']
+    list_display = ['valor', 'periodo', 'nome_conta', 'nome_tipo', 'nome_local', 'observacoes']
+    list_filter = ['conta__tipo', 'conta__local', 'data_hora_atualizacao', 'data_hora_criacao']
     search_fields = ['valor', 'observacoes']
     date_hierarchy = 'periodo'
     exclude = ['usuario', 'excluido']

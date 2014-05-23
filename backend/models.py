@@ -42,7 +42,7 @@ class Conta(CommonInfo):
     
     def __unicode__(self):
         return u'%s - %s - %s' % (self.nome, self.tipo.nome, self.local.nome)
-
+    
 class Ponto(CommonInfo):
     valor = models.DecimalField(max_digits=9, decimal_places=2)
     periodo = models.DateField(default=datetime.now())
@@ -52,3 +52,15 @@ class Ponto(CommonInfo):
     
     class Meta:
         ordering = ['-ativo', '-periodo', '-data_hora_atualizacao', '-data_hora_criacao']
+        
+    def nome_conta(self):
+        return self.conta.nome
+    nome_conta.short_description = 'Conta'
+    
+    def nome_local(self):
+        return self.conta.local.nome
+    nome_local.short_description = 'Local'
+    
+    def nome_tipo(self):
+        return self.conta.tipo.nome
+    nome_tipo.short_description = 'Tipo'
