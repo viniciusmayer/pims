@@ -1,14 +1,12 @@
 from django.http import HttpResponse
-from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.parsers import JSONParser
 from rest_framework.renderers import JSONRenderer
 
-from backend.models import Tipo
-from backend.serializers import TipoSerializer
+from backend.models import Ponto
+from backend.serializers import PontoSerializer
 
 
-# Create your views here.
 class JSONResponse(HttpResponse):
     """
     An HttpResponse that renders its content into JSON.
@@ -19,23 +17,23 @@ class JSONResponse(HttpResponse):
         super(JSONResponse, self).__init__(content, **kwargs)
 
 @csrf_exempt
-def tipo_list(request):
+def ponto_list(request):
     """
     List all code tipos, or create a new snippet.
     """
     if request.method == 'GET':
-        tipos = Tipo.objects.all()
-        serializer = TipoSerializer(tipos, many=True)
+        tipos = Ponto.objects.all()
+        serializer = PontoSerializer(tipos, many=True)
         return JSONResponse(serializer.data)
 
     elif request.method == 'POST':
         data = JSONParser().parse(request)
-        serializer = TipoSerializer(data=data)
+        serializer = PontoSerializer(data=data)
         if serializer.is_valid():
             serializer.save()
             return JSONResponse(serializer.data, status=201)
         return JSONResponse(serializer.errors, status=400)
-    
+'''
 @csrf_exempt
 def tipo_detail(request, pk):
     """
@@ -61,3 +59,4 @@ def tipo_detail(request, pk):
     elif request.method == 'DELETE':
         tipo.delete()
         return HttpResponse(status=204)
+'''

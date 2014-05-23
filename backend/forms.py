@@ -1,15 +1,15 @@
 from django import forms
 
-from backend.models import Valor, Tipo, Instituicao, Investimento
+from backend.models import Ponto, Tipo, Local, Conta
 
 
-class ValorForm(forms.ModelForm):
+class PontoForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
-        super(ValorForm, self).__init__(*args, **kwargs)
+        super(PontoForm, self).__init__(*args, **kwargs)
         self.fields['observacoes'].widget = forms.Textarea()
         
     class Meta:
-        model = Valor
+        model = Ponto
         
 class TipoForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
@@ -19,18 +19,18 @@ class TipoForm(forms.ModelForm):
     class Meta:
         model = Tipo
 
-class InstituicaoForm(forms.ModelForm):
+class LocalForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
-        super(InstituicaoForm, self).__init__(*args, **kwargs)
+        super(LocalForm, self).__init__(*args, **kwargs)
         self.fields['observacoes'].widget = forms.Textarea()
         
     class Meta:
-        model = Instituicao
+        model = Local
         
-class InvestimentoForm(forms.ModelForm):
+class ContaForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
-        super(InvestimentoForm, self).__init__(*args, **kwargs)
+        super(ContaForm, self).__init__(*args, **kwargs)
         self.fields['observacoes'].widget = forms.Textarea()
         
     class Meta:
-        model = Investimento
+        model = Conta

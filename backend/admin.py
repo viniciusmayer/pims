@@ -1,15 +1,15 @@
 from django.contrib import admin
 
-from backend.forms import ValorForm, TipoForm, InstituicaoForm, InvestimentoForm
-from backend.models import Valor, Tipo, Instituicao, Investimento
+from backend.forms import PontoForm, TipoForm, LocalForm, ContaForm
+from backend.models import Ponto, Tipo, Local, Conta
 
 
-class ValorAdmin(admin.ModelAdmin):
-    form = ValorForm
-    list_display = ['valor', 'data', 'investimento', 'observacoes']
-    list_filter = ['investimento', 'data_hora_atualizacao', 'data_hora_criacao']
+class PontoAdmin(admin.ModelAdmin):
+    form = PontoForm
+    list_display = ['valor', 'periodo', 'conta', 'observacoes']
+    list_filter = ['conta', 'data_hora_atualizacao', 'data_hora_criacao']
     search_fields = ['valor', 'observacoes']
-    date_hierarchy = 'data'
+    date_hierarchy = 'periodo'
     exclude = ['usuario', 'excluido']
     
     def save_model(self, request, obj, form, change):
@@ -19,10 +19,10 @@ class ValorAdmin(admin.ModelAdmin):
         obj.save()
         
     def queryset(self, request):
-        qs = super(ValorAdmin, self).queryset(request)
+        qs = super(PontoAdmin, self).queryset(request)
         return qs.filter(excluido=False)
 
-admin.site.register(Valor, ValorAdmin)
+admin.site.register(Ponto, PontoAdmin)
 
 class TipoAdmin(admin.ModelAdmin):
     form = TipoForm
@@ -44,8 +44,8 @@ class TipoAdmin(admin.ModelAdmin):
 
 admin.site.register(Tipo, TipoAdmin)
 
-class InstituicaoAdmin(admin.ModelAdmin):
-    form = InstituicaoForm
+class LocalAdmin(admin.ModelAdmin):
+    form = LocalForm
     list_display = ['nome', 'tipo', 'observacoes']
     list_filter = ['tipo', 'data_hora_atualizacao', 'data_hora_criacao']
     search_fields = ['nome', 'observacoes']
@@ -59,15 +59,15 @@ class InstituicaoAdmin(admin.ModelAdmin):
         obj.save()
 
     def queryset(self, request):
-        qs = super(InstituicaoAdmin, self).queryset(request)
+        qs = super(LocalAdmin, self).queryset(request)
         return qs.filter(excluido=False)
 
-admin.site.register(Instituicao, InstituicaoAdmin)
+admin.site.register(Local, LocalAdmin)
 
-class InvestimentoAdmin(admin.ModelAdmin):
-    form = InvestimentoForm
-    list_display = ['nome', 'tipo', 'instituicao', 'observacoes']
-    list_filter = ['tipo', 'instituicao', 'data_hora_atualizacao', 'data_hora_criacao']
+class ContaAdmin(admin.ModelAdmin):
+    form = ContaForm
+    list_display = ['nome', 'tipo', 'local', 'observacoes']
+    list_filter = ['tipo', 'local', 'data_hora_atualizacao', 'data_hora_criacao']
     search_fields = ['nome', 'observacoes']
     date_hierarchy = 'data_hora_criacao'
     exclude = ['usuario', 'excluido']
@@ -79,7 +79,7 @@ class InvestimentoAdmin(admin.ModelAdmin):
         obj.save()
 
     def queryset(self, request):
-        qs = super(InvestimentoAdmin, self).queryset(request)
+        qs = super(ContaAdmin, self).queryset(request)
         return qs.filter(excluido=False)
     
-admin.site.register(Investimento, InvestimentoAdmin)
+admin.site.register(Conta, ContaAdmin)
