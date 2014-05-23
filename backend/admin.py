@@ -17,13 +17,17 @@ class ValorAdmin(admin.ModelAdmin):
         obj.usuario_criacao = request.user
         obj.usuario_atualizacao = request.user
         obj.save()
+        
+    def queryset(self, request):
+        qs = super(ValorAdmin, self).queryset(request)
+        return qs.filter(excluido=False)
 
 admin.site.register(Valor, ValorAdmin)
 
 class TipoAdmin(admin.ModelAdmin):
     form = TipoForm
-    list_display = ['nome', 'observacoes']
-    list_filter = ['data_hora_atualizacao', 'data_hora_criacao']
+    list_display = ['nome', 'categoria', 'observacoes']
+    list_filter = ['categoria', 'data_hora_atualizacao', 'data_hora_criacao']
     search_fields = ['nome', 'observacoes']
     date_hierarchy = 'data_hora_criacao'
     exclude = ['excluido']
@@ -33,6 +37,10 @@ class TipoAdmin(admin.ModelAdmin):
         obj.usuario_criacao = request.user
         obj.usuario_atualizacao = request.user
         obj.save()
+
+    def queryset(self, request):
+        qs = super(TipoAdmin, self).queryset(request)
+        return qs.filter(excluido=False)
 
 admin.site.register(Tipo, TipoAdmin)
 
@@ -50,6 +58,10 @@ class InstituicaoAdmin(admin.ModelAdmin):
         obj.usuario_atualizacao = request.user
         obj.save()
 
+    def queryset(self, request):
+        qs = super(InstituicaoAdmin, self).queryset(request)
+        return qs.filter(excluido=False)
+
 admin.site.register(Instituicao, InstituicaoAdmin)
 
 class InvestimentoAdmin(admin.ModelAdmin):
@@ -66,4 +78,8 @@ class InvestimentoAdmin(admin.ModelAdmin):
         obj.usuario_atualizacao = request.user
         obj.save()
 
+    def queryset(self, request):
+        qs = super(InvestimentoAdmin, self).queryset(request)
+        return qs.filter(excluido=False)
+    
 admin.site.register(Investimento, InvestimentoAdmin)
