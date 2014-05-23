@@ -7,9 +7,9 @@ from backend.models import Valor, Tipo, Instituicao, Investimento
 class ValorAdmin(admin.ModelAdmin):
     form = ValorForm
     list_display = ['valor', 'data', 'investimento', 'observacoes']
-    list_filter = ['data', 'investimento', 'data_hora_atualizacao', 'data_hora_criacao']
+    list_filter = ['investimento', 'data_hora_atualizacao', 'data_hora_criacao']
     search_fields = ['valor', 'observacoes']
-    date_hierarchy = 'data_hora_criacao'
+    date_hierarchy = 'data'
     exclude = ['usuario', 'excluido']
     
     def save_model(self, request, obj, form, change):
