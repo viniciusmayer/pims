@@ -10,6 +10,7 @@ class PontoForm(forms.ModelForm):
         
     class Meta:
         model = Ponto
+        exclude = [] 
         
 class TipoForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
@@ -18,6 +19,7 @@ class TipoForm(forms.ModelForm):
         
     class Meta:
         model = Tipo
+        exclude = []
 
 class LocalForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
@@ -26,6 +28,7 @@ class LocalForm(forms.ModelForm):
         
     class Meta:
         model = Local
+        exclude = []
         
 class ContaForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
@@ -34,3 +37,4 @@ class ContaForm(forms.ModelForm):
         
     class Meta:
         model = Conta
+        exclude = []
