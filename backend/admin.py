@@ -1,7 +1,7 @@
 from django.contrib import admin
 
-from backend.forms import PontoForm, TipoForm, LocalForm, ContaForm
-from backend.models import Ponto, Tipo, Local, Conta
+from backend.forms import PontoForm, TipoForm, LocalForm, ContaForm, AnaliseForm
+from backend.models import Ponto, Tipo, Local, Conta, Analise
 
 
 class PontoAdmin(admin.ModelAdmin):
@@ -83,3 +83,23 @@ class ContaAdmin(admin.ModelAdmin):
         return qs.filter(excluido=False)
     
 admin.site.register(Conta, ContaAdmin)
+
+class AnaliseAdmin(admin.ModelAdmin):
+    form = AnaliseForm
+    list_display = ['periodo', 'total', 'observacoes']
+    list_filter = ['periodo', 'observacoes']
+    search_fields = ['periodo', 'observacoes']
+    date_hierarchy = 'periodo'
+    exclude = ['usuario', 'excluido']
+    
+    def save_model(self, request, obj, form, change):
+        #FIXME setar o usuario_criacao apenas se for nulo
+        obj.usuario_criacao = request.user
+        obj.usuario_atualizacao = request.user
+        obj.save()
+
+    def get_queryset(self, request):
+        qs = super(AnaliseAdmin, self).get_queryset(request)
+        return qs.filter(excluido=False)
+    
+admin.site.register(Analise, AnaliseAdmin)

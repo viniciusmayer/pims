@@ -64,3 +64,20 @@ class Ponto(CommonInfo):
     def nome_tipo(self):
         return self.conta.tipo.nome
     nome_tipo.short_description = 'Tipo'
+    
+class Analise(CommonInfo):
+    periodo = models.DateField(default=datetime.now())
+    periodoAnterior = models.ForeignKey('self', null=True, blank=True, on_delete=models.SET_NULL, limit_choices_to={'ativo':True, 'excluido':False})
+    
+    class Meta:
+        ordering = ['-ativo', '-periodo', '-data_hora_atualizacao', '-data_hora_criacao']
+        
+    def total(self):
+        total = None
+        pontos = Ponto.objects.filter(periodo = self.periodo)
+        for ponto in pontos:
+            if (total is None):
+                total = 0
+            total += ponto.valor
+        return total
+    total.short_description = 'Total'
