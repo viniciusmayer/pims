@@ -18,8 +18,8 @@ class PontoAdmin(admin.ModelAdmin):
         obj.usuario_atualizacao = request.user
         obj.save()
         
-    def queryset(self, request):
-        qs = super(PontoAdmin, self).queryset(request)
+    def get_queryset(self, request):
+        qs = super(PontoAdmin, self).get_queryset(request)
         return qs.filter(excluido=False)
 
 admin.site.register(Ponto, PontoAdmin)
@@ -38,8 +38,8 @@ class TipoAdmin(admin.ModelAdmin):
         obj.usuario_atualizacao = request.user
         obj.save()
 
-    def queryset(self, request):
-        qs = super(TipoAdmin, self).queryset(request)
+    def get_queryset(self, request):
+        qs = super(TipoAdmin, self).get_queryset(request)
         return qs.filter(excluido=False)
 
 admin.site.register(Tipo, TipoAdmin)
@@ -58,8 +58,8 @@ class LocalAdmin(admin.ModelAdmin):
         obj.usuario_atualizacao = request.user
         obj.save()
 
-    def queryset(self, request):
-        qs = super(LocalAdmin, self).queryset(request)
+    def get_queryset(self, request):
+        qs = super(LocalAdmin, self).get_queryset(request)
         return qs.filter(excluido=False)
 
 admin.site.register(Local, LocalAdmin)
@@ -78,8 +78,8 @@ class ContaAdmin(admin.ModelAdmin):
         obj.usuario_atualizacao = request.user
         obj.save()
 
-    def queryset(self, request):
-        qs = super(ContaAdmin, self).queryset(request)
+    def get_queryset(self, request):
+        qs = super(ContaAdmin, self).get_queryset(request)
         return qs.filter(excluido=False)
     
 admin.site.register(Conta, ContaAdmin)
