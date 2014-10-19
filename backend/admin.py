@@ -86,7 +86,7 @@ admin.site.register(Conta, ContaAdmin)
 
 class AnaliseAdmin(admin.ModelAdmin):
     form = AnaliseForm
-    list_display = ['periodo', 'total', 'observacoes']
+    list_display = ['periodo', 'total', 'diferenca', 'diferencaPercentual', 'periodoAnterior', 'observacoes']
     list_filter = ['periodo', 'observacoes']
     search_fields = ['periodo', 'observacoes']
     date_hierarchy = 'periodo'

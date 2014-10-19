@@ -15,7 +15,7 @@ class Tipo(CommonInfo):
     class Meta:
         ordering = ['-ativo', 'nome', '-data_hora_atualizacao', '-data_hora_criacao']
         
-    def __unicode__(self):
+    def __str__(self):
         return self.nome
 
     
@@ -28,7 +28,7 @@ class Local(CommonInfo):
         ordering = ['-ativo', 'nome', '-data_hora_atualizacao', '-data_hora_criacao']
         verbose_name_plural = 'locais'
         
-    def __unicode__(self):
+    def __str__(self):
         return self.nome
     
 class Conta(CommonInfo):
@@ -40,7 +40,7 @@ class Conta(CommonInfo):
     class Meta:
         ordering = ['-ativo', 'nome', '-data_hora_atualizacao', '-data_hora_criacao']
     
-    def __unicode__(self):
+    def __str__(self):
         return u'%s - %s - %s' % (self.nome, self.tipo.nome, self.local.nome)
     
 class Ponto(CommonInfo):
@@ -65,6 +65,9 @@ class Ponto(CommonInfo):
         return self.conta.tipo.nome
     nome_tipo.short_description = 'Tipo'
     
+    def __str__(self):
+        return str(self.periodo)
+    
 class Analise(CommonInfo):
     periodo = models.DateField(default=datetime.now())
     periodoAnterior = models.ForeignKey('self', null=True, blank=True, on_delete=models.SET_NULL, limit_choices_to={'ativo':True, 'excluido':False})
@@ -81,3 +84,17 @@ class Analise(CommonInfo):
             total += ponto.valor
         return total
     total.short_description = 'Total'
+    
+    def diferenca(self):
+        if (not self.periodoAnterior is None):
+            return self.total() - self.periodoAnterior.total()
+        return None
+    
+    def diferencaPercentual(self):
+        if (not self.periodoAnterior is None):
+            return round(((self.diferenca() / self.periodoAnterior.total()) * 100), 2)
+        return None
+    diferencaPercentual.short_description = 'Diferenca percentual'
+    
+    def __str__(self):
+        return str(self.periodo)
