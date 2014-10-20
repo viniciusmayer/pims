@@ -46,6 +46,7 @@ class Conta(CommonInfo):
 class Ponto(CommonInfo):
     valor = models.DecimalField(max_digits=9, decimal_places=2)
     periodo = models.DateField(default=datetime.now())
+    #FIXME change from periodoAnterior to pontoAnterior 
     periodoAnterior = models.ForeignKey('self', null=True, blank=True, on_delete=models.SET_NULL, limit_choices_to={'ativo':True, 'excluido':False})
     
     conta = models.ForeignKey(Conta, limit_choices_to={'ativo':True, 'excluido':False})
@@ -70,6 +71,7 @@ class Ponto(CommonInfo):
     
 class Analise(CommonInfo):
     periodo = models.DateField(default=datetime.now())
+    #FIXME change from periodoAnterior to analiseAnterior
     periodoAnterior = models.ForeignKey('self', null=True, blank=True, on_delete=models.SET_NULL, limit_choices_to={'ativo':True, 'excluido':False})
     
     class Meta:
