@@ -26,7 +26,7 @@ def importFiles(connection, cursor):
         except Exception as e:
             print(e)
         
-insertAnaliseSQL = 'insert into backend_analise(observacoes, ativo, excluido, data_hora_criacao, usuario_criacao_id, data_hora_atualizacao, usuario_atualizacao_id, periodo, "periodoAnterior_id")'\
+insertAnaliseSQL = 'insert into backend_analise(observacoes, ativo, excluido, data_hora_criacao, usuario_criacao_id, data_hora_atualizacao, usuario_atualizacao_id, periodo, "analiseAnterior_id")'\
             ' values (''\'imported''\',true,false,now(),(select id from auth_user'\
             '     where email = ''\'viniciusmayer@gmail.com''\'),now(),(select id from auth_user'\
             '         where email = ''\'viniciusmayer@gmail.com''\'), {0}, null)'
@@ -43,7 +43,7 @@ def insertAnalise(connection, cursor):
 selectMaxPeriodo = 'select max(periodo) from backend_ponto'\
             ' where conta_id = {0} and periodo < (select periodo from backend_ponto'\
             '     where conta_id = {1} and id = {2})'
-updatePontoSQL = 'update backend_ponto set ''\"periodoAnterior_id''\" = (select id from backend_ponto'\
+updatePontoSQL = 'update backend_ponto set ''\"pontoAnterior_id''\" = (select id from backend_ponto'\
             ' where conta_id = {0} and periodo = (select max(periodo) from backend_ponto'\
             '     where conta_id = {1} and periodo < (select periodo from backend_ponto'\
             '         where conta_id = {2} and id = {3})))'\
@@ -65,7 +65,7 @@ def updatePonto(connection, cursor):
 selectMaxPeriodoAnalise = 'select max(periodo) from backend_analise'\
             ' where periodo < (select periodo from backend_analise'\
             '     where id = {0})'
-updateAnaliseSQL = 'update backend_analise set "periodoAnterior_id" = (select id from backend_analise'\
+updateAnaliseSQL = 'update backend_analise set "analiseAnterior_id" = (select id from backend_analise'\
             ' where periodo = (select max(periodo) from backend_analise'\
             '     where periodo < (select periodo from backend_analise'\
             '         where id = {0})))'\

@@ -6,11 +6,11 @@ from backend.models import Ponto, Tipo, Local, Conta, Analise
 
 class PontoAdmin(admin.ModelAdmin):
     form = PontoForm
-    list_display = ['valor', 'periodo', 'periodoAnterior', 'nome_conta', 'nome_tipo', 'nome_local', 'observacoes']
-    list_filter = ['conta__tipo', 'conta__local', 'data_hora_atualizacao', 'data_hora_criacao']
+    list_display = ['valor', 'periodo', 'nome_conta', 'nome_tipo', 'nome_local', 'pontoAnterior', 'observacoes']
+    list_filter = ['conta__nome', 'conta__tipo', 'conta__local']
     search_fields = ['valor', 'observacoes']
     date_hierarchy = 'periodo'
-    exclude = ['usuario', 'excluido']
+    exclude = ['excluido']
     
     def save_model(self, request, obj, form, change):
         #FIXME setar o usuario_criacao apenas se for nulo
@@ -27,9 +27,9 @@ admin.site.register(Ponto, PontoAdmin)
 class TipoAdmin(admin.ModelAdmin):
     form = TipoForm
     list_display = ['nome', 'categoria', 'observacoes']
-    list_filter = ['categoria', 'data_hora_atualizacao', 'data_hora_criacao']
+    list_filter = ['categoria']
     search_fields = ['nome', 'observacoes']
-    date_hierarchy = 'data_hora_criacao'
+    #date_hierarchy = 'data_hora_criacao'
     exclude = ['excluido']
     
     def save_model(self, request, obj, form, change):
@@ -47,10 +47,10 @@ admin.site.register(Tipo, TipoAdmin)
 class LocalAdmin(admin.ModelAdmin):
     form = LocalForm
     list_display = ['nome', 'tipo', 'observacoes']
-    list_filter = ['tipo', 'data_hora_atualizacao', 'data_hora_criacao']
+    list_filter = ['tipo']
     search_fields = ['nome', 'observacoes']
-    date_hierarchy = 'data_hora_criacao'
-    exclude = ['usuario', 'excluido']
+    #date_hierarchy = 'data_hora_criacao'
+    exclude = ['excluido']
     
     def save_model(self, request, obj, form, change):
         #FIXME setar o usuario_criacao apenas se for nulo
@@ -67,10 +67,10 @@ admin.site.register(Local, LocalAdmin)
 class ContaAdmin(admin.ModelAdmin):
     form = ContaForm
     list_display = ['nome', 'tipo', 'local', 'observacoes']
-    list_filter = ['tipo', 'local', 'data_hora_atualizacao', 'data_hora_criacao']
+    list_filter = ['tipo', 'local']
     search_fields = ['nome', 'observacoes']
-    date_hierarchy = 'data_hora_criacao'
-    exclude = ['usuario', 'excluido']
+    #date_hierarchy = 'data_hora_criacao'
+    exclude = ['excluido']
     
     def save_model(self, request, obj, form, change):
         #FIXME setar o usuario_criacao apenas se for nulo
@@ -86,11 +86,11 @@ admin.site.register(Conta, ContaAdmin)
 
 class AnaliseAdmin(admin.ModelAdmin):
     form = AnaliseForm
-    list_display = ['periodo', 'total', 'diferenca', 'diferencaPercentual', 'periodoAnterior', 'observacoes']
-    list_filter = ['periodo', 'observacoes']
-    search_fields = ['periodo', 'observacoes']
+    list_display = ['periodo', 'total', 'diferenca', 'diferencaPercentual', 'analiseAnterior', 'observacoes']
+    #list_filter = ['periodo', 'observacoes']
+    search_fields = ['observacoes']
     date_hierarchy = 'periodo'
-    exclude = ['usuario', 'excluido']
+    exclude = ['excluido']
     
     def save_model(self, request, obj, form, change):
         #FIXME setar o usuario_criacao apenas se for nulo

@@ -46,8 +46,7 @@ class Conta(CommonInfo):
 class Ponto(CommonInfo):
     valor = models.DecimalField(max_digits=9, decimal_places=2)
     periodo = models.DateField(default=datetime.now())
-    #FIXME change from periodoAnterior to pontoAnterior 
-    periodoAnterior = models.ForeignKey('self', null=True, blank=True, on_delete=models.SET_NULL, limit_choices_to={'ativo':True, 'excluido':False})
+    pontoAnterior = models.ForeignKey('self', null=True, blank=True, on_delete=models.SET_NULL, limit_choices_to={'ativo':True, 'excluido':False})
     
     conta = models.ForeignKey(Conta, limit_choices_to={'ativo':True, 'excluido':False})
     
@@ -67,12 +66,11 @@ class Ponto(CommonInfo):
     nome_tipo.short_description = 'Tipo'
     
     def __str__(self):
-        return str(self.periodo)
+        return u'%s - %s - %s - %s' % (self.periodo, self.nome_conta(), self.nome_tipo(), self.nome_local())
     
 class Analise(CommonInfo):
     periodo = models.DateField(default=datetime.now())
-    #FIXME change from periodoAnterior to analiseAnterior
-    periodoAnterior = models.ForeignKey('self', null=True, blank=True, on_delete=models.SET_NULL, limit_choices_to={'ativo':True, 'excluido':False})
+    analiseAnterior = models.ForeignKey('self', null=True, blank=True, on_delete=models.SET_NULL, limit_choices_to={'ativo':True, 'excluido':False})
     
     class Meta:
         ordering = ['-ativo', '-periodo', '-data_hora_atualizacao', '-data_hora_criacao']
@@ -88,13 +86,13 @@ class Analise(CommonInfo):
     total.short_description = 'Total'
     
     def diferenca(self):
-        if (not self.periodoAnterior is None):
-            return self.total() - self.periodoAnterior.total()
+        if (not self.analiseAnterior is None):
+            return self.total() - self.analiseAnterior.total()
         return None
     
     def diferencaPercentual(self):
-        if (not self.periodoAnterior is None):
-            return round(((self.diferenca() / self.periodoAnterior.total()) * 100), 2)
+        if (not self.analiseAnterior is None):
+            return round(((self.diferenca() / self.analiseAnterior.total()) * 100), 2)
         return None
     diferencaPercentual.short_description = 'Diferenca percentual'
     
