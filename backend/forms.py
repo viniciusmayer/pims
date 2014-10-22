@@ -1,6 +1,7 @@
 from django import forms
 
-from backend.models import Ponto, Tipo, Local, Conta, Analise
+from backend.models import Ponto, Tipo, Local, Conta, Analise, Periodo,\
+    Movimento
 
 
 class PontoForm(forms.ModelForm):
@@ -46,4 +47,22 @@ class AnaliseForm(forms.ModelForm):
         
     class Meta:
         model = Analise
+        exclude = []
+
+class PeriodoForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(PeriodoForm, self).__init__(*args, **kwargs)
+        self.fields['observacoes'].widget = forms.Textarea()
+        
+    class Meta:
+        model = Periodo
+        exclude = []
+
+class MovimentoForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(MovimentoForm, self).__init__(*args, **kwargs)
+        self.fields['observacoes'].widget = forms.Textarea()
+        
+    class Meta:
+        model = Movimento
         exclude = []

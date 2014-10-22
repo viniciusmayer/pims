@@ -1,7 +1,9 @@
 from django.contrib import admin
 
-from backend.forms import PontoForm, TipoForm, LocalForm, ContaForm, AnaliseForm
-from backend.models import Ponto, Tipo, Local, Conta, Analise
+from backend.forms import PontoForm, TipoForm, LocalForm, ContaForm, AnaliseForm, \
+    PeriodoForm, MovimentoForm
+from backend.models import Ponto, Tipo, Local, Conta, Analise, Periodo,\
+    Movimento
 
 
 class PontoAdmin(admin.ModelAdmin):
@@ -103,3 +105,43 @@ class AnaliseAdmin(admin.ModelAdmin):
         return qs.filter(excluido=False)
     
 admin.site.register(Analise, AnaliseAdmin)
+
+class PeriodoAdmin(admin.ModelAdmin):
+    form = PeriodoForm
+    list_display = ['data', 'periodoAnterior', 'observacoes']
+    #list_filter = ['periodo', 'observacoes']
+    search_fields = ['observacoes']
+    date_hierarchy = 'data'
+    exclude = ['excluido']
+    
+    def save_model(self, request, obj, form, change):
+        #FIXME setar o usuario_criacao apenas se for nulo
+        obj.usuario_criacao = request.user
+        obj.usuario_atualizacao = request.user
+        obj.save()
+
+    def get_queryset(self, request):
+        qs = super(PeriodoAdmin, self).get_queryset(request)
+        return qs.filter(excluido=False)
+    
+admin.site.register(Periodo, PeriodoAdmin)
+
+class MovimentoAdmin(admin.ModelAdmin):
+    form = MovimentoForm
+    list_display = ['operacao', 'valor', 'ponto', 'observacoes']
+    list_filter = ['operacao', 'observacoes']
+    search_fields = ['observacoes']
+    #date_hierarchy = 'data'
+    exclude = ['excluido']
+    
+    def save_model(self, request, obj, form, change):
+        #FIXME setar o usuario_criacao apenas se for nulo
+        obj.usuario_criacao = request.user
+        obj.usuario_atualizacao = request.user
+        obj.save()
+
+    def get_queryset(self, request):
+        qs = super(MovimentoAdmin, self).get_queryset(request)
+        return qs.filter(excluido=False)
+    
+admin.site.register(Movimento, MovimentoAdmin)

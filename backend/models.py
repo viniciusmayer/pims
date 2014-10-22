@@ -18,7 +18,6 @@ class Tipo(CommonInfo):
     def __str__(self):
         return self.nome
 
-    
 class Local(CommonInfo):
     nome = models.CharField(max_length=255)
 
@@ -43,11 +42,21 @@ class Conta(CommonInfo):
     def __str__(self):
         return u'%s - %s - %s' % (self.nome, self.tipo.nome, self.local.nome)
     
+class Periodo(CommonInfo):
+    data = models.DateField(default=datetime.now())
+    periodoAnterior = models.ForeignKey('self', null=True, blank=True, on_delete=models.SET_NULL, limit_choices_to={'ativo':True, 'excluido':False})
+    
+    class Meta:
+        ordering = ['-ativo', '-data', '-data_hora_atualizacao', '-data_hora_criacao']
+        
+    def __str__(self):
+        return str(self.data)    
+    
 class Ponto(CommonInfo):
     valor = models.DecimalField(max_digits=9, decimal_places=2)
     periodo = models.DateField(default=datetime.now())
+
     pontoAnterior = models.ForeignKey('self', null=True, blank=True, on_delete=models.SET_NULL, limit_choices_to={'ativo':True, 'excluido':False})
-    
     conta = models.ForeignKey(Conta, limit_choices_to={'ativo':True, 'excluido':False})
     
     class Meta:
@@ -66,9 +75,17 @@ class Ponto(CommonInfo):
     nome_tipo.short_description = 'Tipo'
 
     def diferenca(self):
+        _diferenca = None
         if (not self.pontoAnterior is None):
-            return self.valor - self.pontoAnterior.valor
-        return None
+            _diferenca = self.valor - self.pontoAnterior.valor
+            movimentos = Movimento.objects.filter(ponto = self)
+            for movimento in movimentos:
+                #FIXME transformar numa Enum
+                if (movimento.operacao == 'CR'):
+                    _diferenca -= movimento.valor
+                elif (movimento.operacao == 'DE'):
+                    _diferenca += movimento.valor
+        return _diferenca
     
     def diferencaPercentual(self):
         if (not self.pontoAnterior is None):
@@ -78,6 +95,24 @@ class Ponto(CommonInfo):
     
     def __str__(self):
         return u'%s - %s - %s - %s' % (self.periodo, self.nome_conta(), self.nome_tipo(), self.nome_local())
+
+class Movimento(CommonInfo):
+    OPERACAO = (
+        ('DE', 'Debito'),
+        ('CR', 'Credito'),
+    )
+    operacao = models.CharField(max_length=2, choices=OPERACAO)
+    valor = models.DecimalField(max_digits=9, decimal_places=2)
+    
+    ponto = models.ForeignKey(Ponto, limit_choices_to={'ativo':True, 'excluido':False})
+    
+    class Meta:
+        ordering = ['-ativo', '-data_hora_atualizacao', '-data_hora_criacao']
+    
+    def __str__(self):
+        if (self.operacao is 'DE'):
+            return '{0}{1} {2}'.format('-', self.valor, self.ponto)
+        return '{0} {1}'.format(self.valor, self.ponto)
     
 class Analise(CommonInfo):
     periodo = models.DateField(default=datetime.now())
@@ -88,13 +123,12 @@ class Analise(CommonInfo):
         
     def total(self):
         total = None
-        pontos = Ponto.objects.filter(periodo = self.periodo)
+        pontos = Ponto.objects.filter(periodo=self.periodo)
         for ponto in pontos:
             if (total is None):
                 total = 0
             total += ponto.valor
         return total
-    total.short_description = 'Total'
     
     def diferenca(self):
         if (not self.analiseAnterior is None):
