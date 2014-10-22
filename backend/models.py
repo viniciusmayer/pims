@@ -64,6 +64,17 @@ class Ponto(CommonInfo):
     def nome_tipo(self):
         return self.conta.tipo.nome
     nome_tipo.short_description = 'Tipo'
+
+    def diferenca(self):
+        if (not self.pontoAnterior is None):
+            return self.valor - self.pontoAnterior.valor
+        return None
+    
+    def diferencaPercentual(self):
+        if (not self.pontoAnterior is None):
+            return round(((self.diferenca() / self.pontoAnterior.valor) * 100), 2)
+        return None
+    diferencaPercentual.short_description = 'Diferenca percentual'
     
     def __str__(self):
         return u'%s - %s - %s - %s' % (self.periodo, self.nome_conta(), self.nome_tipo(), self.nome_local())
