@@ -8,8 +8,8 @@ from backend.models import Ponto, Tipo, Local, Conta, Analise, Periodo,\
 
 class PontoAdmin(admin.ModelAdmin):
     form = PontoForm
-    list_display = ['valor', 'periodo', 'nome_conta', 'nome_tipo', 'nome_local', 'diferenca', 'diferencaPercentual', 'pontoAnterior', 'observacoes']
-    list_filter = ['conta__nome', 'conta__tipo', 'conta__local']
+    list_display = ['valor', 'periodo', 'nome_local', 'nome_tipo', 'nome_conta', 'diferenca', 'diferencaPercentual', 'pontoAnterior', 'observacoes']
+    list_filter = ['conta__local', 'conta__tipo', 'conta__nome']
     search_fields = ['valor', 'observacoes']
     date_hierarchy = 'periodo'
     exclude = ['excluido']
@@ -69,7 +69,7 @@ admin.site.register(Local, LocalAdmin)
 class ContaAdmin(admin.ModelAdmin):
     form = ContaForm
     list_display = ['nome', 'tipo', 'local', 'observacoes']
-    list_filter = ['tipo', 'local']
+    list_filter = ['local', 'tipo']
     search_fields = ['nome', 'observacoes']
     #date_hierarchy = 'data_hora_criacao'
     exclude = ['excluido']

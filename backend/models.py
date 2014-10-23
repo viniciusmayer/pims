@@ -94,7 +94,7 @@ class Ponto(CommonInfo):
     diferencaPercentual.short_description = 'Diferenca percentual'
     
     def __str__(self):
-        return u'%s - %s - %s - %s' % (self.periodo, self.nome_conta(), self.nome_tipo(), self.nome_local())
+        return u'%s - %s - %s - %s' % (self.periodo, self.nome_local(), self.nome_tipo(), self.nome_conta())
 
 class Movimento(CommonInfo):
     OPERACAO = (
