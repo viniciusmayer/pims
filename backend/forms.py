@@ -1,6 +1,6 @@
 from django import forms
 
-from backend.models import Ponto, Tipo, Local, Conta, Analise, Periodo,\
+from backend.models import Ponto, Tipo, Local, Conta, Analise, Periodo, \
     Movimento, Rendimento
 
 

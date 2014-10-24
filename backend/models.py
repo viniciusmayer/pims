@@ -1,8 +1,8 @@
 from datetime import datetime
+from decimal import Decimal
 from django.db import models
 
 from common.models import CommonInfo
-from decimal import Decimal
 
 
 class Tipo(CommonInfo):
@@ -79,9 +79,9 @@ class Ponto(CommonInfo):
         _diferenca = None
         if (not self.pontoAnterior is None):
             _diferenca = self.valor - self.pontoAnterior.valor
-            movimentos = Movimento.objects.filter(ponto = self)
+            movimentos = Movimento.objects.filter(ponto=self)
             for movimento in movimentos:
-                #FIXME transformar numa Enum
+                # FIXME transformar numa Enum
                 if (movimento.operacao == 'CR'):
                     _diferenca -= movimento.valor
                 elif (movimento.operacao == 'DE'):
@@ -153,7 +153,7 @@ class Rendimento(CommonInfo):
 
     def total(self):
         total = None
-        pontos = Ponto.objects.filter(conta = self.conta)
+        pontos = Ponto.objects.filter(conta=self.conta)
         for ponto in pontos:
             if (total is None):
                 total = Decimal(0)
@@ -163,7 +163,7 @@ class Rendimento(CommonInfo):
         return round(total, 2)
     
     def vezes(self):
-        pontos = Ponto.objects.filter(conta = self.conta)
+        pontos = Ponto.objects.filter(conta=self.conta)
         count = 0
         for ponto in pontos:
             dif = ponto.diferenca()
@@ -181,7 +181,7 @@ class Rendimento(CommonInfo):
     
     def mediaPercentual(self):
         total = None
-        pontos = Ponto.objects.filter(conta = self.conta)
+        pontos = Ponto.objects.filter(conta=self.conta)
         for ponto in pontos:
             if (total is None):
                 total = Decimal(0)
