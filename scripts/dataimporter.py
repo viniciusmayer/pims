@@ -1,6 +1,7 @@
 import csv
 from datetime import date
 
+
 selectUsuario = '(select id from auth_user where email = ''\'viniciusmayer@gmail.com''\')'
 selectTipo = '(select id from backend_tipo where nome = ''\'{0}''\')'
 selectLocal = '(select id from backend_local where nome = ''\'{0}''\')'
@@ -75,9 +76,9 @@ try:
             insertIntoContaSql.write(insertIntoContaFormated)
             insertIntoContaSql.write('\n')                
             
-            for x in range(0,10):
-                if (cels[x+3] != '-'):
-                    p = (cels[x+3], "'{0}'".format(date(2014, (x+1), 15)), selectConta.format(selectLocal.format(local), selectTipo.format(tipo), conta))
+            for x in range(0, 10):
+                if (cels[x + 3] != '-'):
+                    p = (cels[x + 3], "'{0}'".format(date(2014, (x + 1), 15)), selectConta.format(selectLocal.format(local), selectTipo.format(tipo), conta))
                     insertIntoPontoSql.write(insertIntoPonto.format(*p))
                     insertIntoPontoSql.write("\n")
             

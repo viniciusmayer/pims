@@ -1,6 +1,7 @@
 from django.contrib.auth.models import User
 from django.db import models
 
+
 class CommonInfo(models.Model):
     observacoes = models.CharField(null=True, blank=True, max_length=255)
 

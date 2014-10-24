@@ -9,7 +9,7 @@ admin.autodiscover()
 urlpatterns = patterns('',
     url(r'^admin/', include(admin.site.urls)),
     url(r'^pontos/$', views.PontoView.as_view()),
-    #url(r'^valores/(?P<pk>[0-9]+)/$', 'tipo_detail'),
+    # url(r'^valores/(?P<pk>[0-9]+)/$', 'tipo_detail'),
 )
 
-#urlpatterns = format_suffix_patterns(urlpatterns)
+# urlpatterns = format_suffix_patterns(urlpatterns)
