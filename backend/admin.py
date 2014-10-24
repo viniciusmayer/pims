@@ -148,7 +148,7 @@ admin.site.register(Movimento, MovimentoAdmin)
 
 class RendimentoAdmin(admin.ModelAdmin):
     form = RendimentoForm
-    list_display = ['conta', 'total', 'observacoes']
+    list_display = ['conta', 'total', 'vezes', 'medio', 'mediaPercentual', 'observacoes']
     #list_filter = ['conta']
     search_fields = ['observacoes']
     #date_hierarchy = 'data'

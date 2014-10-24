@@ -41,7 +41,7 @@ class Conta(CommonInfo):
         ordering = ['-ativo', 'nome', '-data_hora_atualizacao', '-data_hora_criacao']
     
     def __str__(self):
-        return u'%s - %s - %s' % (self.nome, self.tipo.nome, self.local.nome)
+        return u'%s - %s - %s' % (self.local.nome, self.tipo.nome, self.nome)
     
 class Periodo(CommonInfo):
     data = models.DateField(default=datetime.now())
@@ -92,7 +92,7 @@ class Ponto(CommonInfo):
         if (not self.pontoAnterior is None):
             return round(((self.diferenca() / self.pontoAnterior.valor) * 100), 2)
         return None
-    diferencaPercentual.short_description = 'Diferenca percentual'
+    diferencaPercentual.short_description = 'diferenca percentual'
     
     def __str__(self):
         return u'%s - %s - %s - %s' % (self.periodo, self.nome_local(), self.nome_tipo(), self.nome_conta())
@@ -140,7 +140,7 @@ class Analise(CommonInfo):
         if (not self.analiseAnterior is None):
             return round(((self.diferenca() / self.analiseAnterior.total()) * 100), 2)
         return None
-    diferencaPercentual.short_description = 'Diferenca percentual'
+    diferencaPercentual.short_description = 'diferenca percentual'
     
     def __str__(self):
         return str(self.periodo)
@@ -150,17 +150,44 @@ class Rendimento(CommonInfo):
         
     class Meta:
         ordering = ['-ativo', '-data_hora_atualizacao', '-data_hora_criacao']
-    
+
     def total(self):
         total = None
         pontos = Ponto.objects.filter(conta = self.conta)
+        for ponto in pontos:
+            if (total is None):
+                total = Decimal(0)
+            diferenca = ponto.diferenca()
+            if (not diferenca is None):
+                total += diferenca
+        return round(total, 2)
+    
+    def vezes(self):
+        pontos = Ponto.objects.filter(conta = self.conta)
         count = 0
+        for ponto in pontos:
+            dif = ponto.diferenca()
+            if (not dif is None):
+                count += 1
+        return count
+    
+    def medio(self):
+        total = self.total()
+        if (not total is None):
+            total /= self.vezes()
+            return round(total, 2)
+        return None
+    medio.short_description = 'media'
+    
+    def mediaPercentual(self):
+        total = None
+        pontos = Ponto.objects.filter(conta = self.conta)
         for ponto in pontos:
             if (total is None):
                 total = Decimal(0)
             dif = ponto.diferencaPercentual()
             if (not dif is None):
                 total += ponto.diferencaPercentual()
-                count += 1
-        total /= count
+        total /= self.vezes()
         return round(total, 2)
+    mediaPercentual.short_description = 'media percentual'
