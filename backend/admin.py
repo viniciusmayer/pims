@@ -1,9 +1,9 @@
 from django.contrib import admin
 
 from backend.forms import PontoForm, TipoForm, LocalForm, ContaForm, AnaliseForm, \
-    PeriodoForm, MovimentoForm
+    PeriodoForm, MovimentoForm, RendimentoForm
 from backend.models import Ponto, Tipo, Local, Conta, Analise, Periodo,\
-    Movimento
+    Movimento, Rendimento
 
 
 class PontoAdmin(admin.ModelAdmin):
@@ -129,7 +129,7 @@ admin.site.register(Periodo, PeriodoAdmin)
 class MovimentoAdmin(admin.ModelAdmin):
     form = MovimentoForm
     list_display = ['operacao', 'valor', 'ponto', 'observacoes']
-    list_filter = ['operacao', 'observacoes']
+    list_filter = ['operacao']
     search_fields = ['observacoes']
     #date_hierarchy = 'data'
     exclude = ['excluido']
@@ -145,3 +145,23 @@ class MovimentoAdmin(admin.ModelAdmin):
         return qs.filter(excluido=False)
     
 admin.site.register(Movimento, MovimentoAdmin)
+
+class RendimentoAdmin(admin.ModelAdmin):
+    form = RendimentoForm
+    list_display = ['conta', 'total', 'observacoes']
+    #list_filter = ['conta']
+    search_fields = ['observacoes']
+    #date_hierarchy = 'data'
+    exclude = ['excluido']
+    
+    def save_model(self, request, obj, form, change):
+        #FIXME setar o usuario_criacao apenas se for nulo
+        obj.usuario_criacao = request.user
+        obj.usuario_atualizacao = request.user
+        obj.save()
+
+    def get_queryset(self, request):
+        qs = super(RendimentoAdmin, self).get_queryset(request)
+        return qs.filter(excluido=False)
+    
+admin.site.register(Rendimento, RendimentoAdmin)

@@ -2,6 +2,7 @@ from datetime import datetime
 from django.db import models
 
 from common.models import CommonInfo
+from decimal import Decimal
 
 
 class Tipo(CommonInfo):
@@ -143,3 +144,23 @@ class Analise(CommonInfo):
     
     def __str__(self):
         return str(self.periodo)
+    
+class Rendimento(CommonInfo):
+    conta = models.ForeignKey(Conta, limit_choices_to={'ativo':True, 'excluido':False})
+        
+    class Meta:
+        ordering = ['-ativo', '-data_hora_atualizacao', '-data_hora_criacao']
+    
+    def total(self):
+        total = None
+        pontos = Ponto.objects.filter(conta = self.conta)
+        count = 0
+        for ponto in pontos:
+            if (total is None):
+                total = Decimal(0)
+            dif = ponto.diferencaPercentual()
+            if (not dif is None):
+                total += ponto.diferencaPercentual()
+                count += 1
+        total /= count
+        return round(total, 2)
