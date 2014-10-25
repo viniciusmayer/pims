@@ -33,6 +33,7 @@ class Local(CommonInfo):
     
 class Conta(CommonInfo):
     nome = models.CharField(max_length=255)
+    rendimento = models.BooleanField(default=False)
     
     local = models.ForeignKey(Local, limit_choices_to={'ativo':True, 'excluido':False})
     tipo = models.ForeignKey(Tipo, limit_choices_to={'ativo':True, 'excluido':False, 'categoria':'CO'})
@@ -146,7 +147,7 @@ class Analise(CommonInfo):
         return str(self.periodo)
     
 class Rendimento(CommonInfo):
-    conta = models.ForeignKey(Conta, limit_choices_to={'ativo':True, 'excluido':False})
+    conta = models.ForeignKey(Conta, limit_choices_to={'ativo':True, 'excluido':False}, related_name = 'rendimento_conta')
         
     class Meta:
         ordering = ['-ativo', '-data_hora_atualizacao', '-data_hora_criacao']
@@ -191,3 +192,48 @@ class Rendimento(CommonInfo):
         total /= self.vezes()
         return round(total, 2)
     mediaPercentual.short_description = 'media percentual'
+
+class RendimentoPorPeriodo(CommonInfo):
+    periodo = models.DateField(default=datetime.now())
+            
+    class Meta:
+        ordering = ['-ativo', '-data_hora_atualizacao', '-data_hora_criacao']
+
+    def total(self):
+        total = None
+        pontos = Ponto.objects.filter(periodo=self.periodo, conta__rendimento = True)
+        for ponto in pontos:
+            diferenca = ponto.diferenca()
+            if (not diferenca is None):
+                if (total is None):
+                    total = Decimal(0)
+                total += diferenca
+        if (not total is None):
+            total = round(total, 2)
+        return total
+    
+    def vezes(self):
+        pontos = Ponto.objects.filter(periodo=self.periodo, conta__rendimento = True)
+        count = None
+        for ponto in pontos:
+            diferenca = ponto.diferenca()
+            if (not diferenca is None):
+                if (count is None):
+                    count = 0
+                count += 1
+        return count
+    
+    def medio(self):
+        total = self.total()
+        if (not total is None):
+            total /= self.vezes()
+            return round(total, 2)
+        return None
+    medio.short_description = 'media'
+    
+class Configuracao(CommonInfo):
+    chave = models.CharField(max_length=255)
+    valor = models.CharField(max_length=255)
+    
+    class Meta:
+        verbose_name_plural = 'configuracoes'

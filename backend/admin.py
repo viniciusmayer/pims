@@ -1,9 +1,10 @@
 from django.contrib import admin
 
 from backend.forms import PontoForm, TipoForm, LocalForm, ContaForm, AnaliseForm, \
-    PeriodoForm, MovimentoForm, RendimentoForm
+    PeriodoForm, MovimentoForm, RendimentoForm, ConfiguracaoForm, \
+    RendimentoPorPeriodoForm
 from backend.models import Ponto, Tipo, Local, Conta, Analise, Periodo, \
-    Movimento, Rendimento
+    Movimento, Rendimento, Configuracao, RendimentoPorPeriodo
 
 
 class PontoAdmin(admin.ModelAdmin):
@@ -31,7 +32,6 @@ class TipoAdmin(admin.ModelAdmin):
     list_display = ['nome', 'categoria', 'observacoes']
     list_filter = ['categoria']
     search_fields = ['nome', 'observacoes']
-    # date_hierarchy = 'data_hora_criacao'
     exclude = ['excluido']
     
     def save_model(self, request, obj, form, change):
@@ -51,7 +51,6 @@ class LocalAdmin(admin.ModelAdmin):
     list_display = ['nome', 'tipo', 'observacoes']
     list_filter = ['tipo']
     search_fields = ['nome', 'observacoes']
-    # date_hierarchy = 'data_hora_criacao'
     exclude = ['excluido']
     
     def save_model(self, request, obj, form, change):
@@ -68,10 +67,9 @@ admin.site.register(Local, LocalAdmin)
 
 class ContaAdmin(admin.ModelAdmin):
     form = ContaForm
-    list_display = ['nome', 'tipo', 'local', 'observacoes']
-    list_filter = ['local', 'tipo']
+    list_display = ['nome', 'tipo', 'local', 'rendimento', 'observacoes']
+    list_filter = ['local', 'tipo', 'rendimento']
     search_fields = ['nome', 'observacoes']
-    # date_hierarchy = 'data_hora_criacao'
     exclude = ['excluido']
     
     def save_model(self, request, obj, form, change):
@@ -89,7 +87,6 @@ admin.site.register(Conta, ContaAdmin)
 class AnaliseAdmin(admin.ModelAdmin):
     form = AnaliseForm
     list_display = ['periodo', 'total', 'diferenca', 'diferencaPercentual', 'analiseAnterior', 'observacoes']
-    # list_filter = ['periodo', 'observacoes']
     search_fields = ['observacoes']
     date_hierarchy = 'periodo'
     exclude = ['excluido']
@@ -109,7 +106,6 @@ admin.site.register(Analise, AnaliseAdmin)
 class PeriodoAdmin(admin.ModelAdmin):
     form = PeriodoForm
     list_display = ['data', 'periodoAnterior', 'observacoes']
-    # list_filter = ['periodo', 'observacoes']
     search_fields = ['observacoes']
     date_hierarchy = 'data'
     exclude = ['excluido']
@@ -131,7 +127,6 @@ class MovimentoAdmin(admin.ModelAdmin):
     list_display = ['operacao', 'valor', 'ponto', 'observacoes']
     list_filter = ['operacao']
     search_fields = ['observacoes']
-    # date_hierarchy = 'data'
     exclude = ['excluido']
     
     def save_model(self, request, obj, form, change):
@@ -149,9 +144,7 @@ admin.site.register(Movimento, MovimentoAdmin)
 class RendimentoAdmin(admin.ModelAdmin):
     form = RendimentoForm
     list_display = ['conta', 'total', 'vezes', 'medio', 'mediaPercentual', 'observacoes']
-    # list_filter = ['conta']
     search_fields = ['observacoes']
-    # date_hierarchy = 'data'
     exclude = ['excluido']
     
     def save_model(self, request, obj, form, change):
@@ -165,3 +158,38 @@ class RendimentoAdmin(admin.ModelAdmin):
         return qs.filter(excluido=False)
     
 admin.site.register(Rendimento, RendimentoAdmin)
+
+class RendimentoPorPeriodoAdmin(admin.ModelAdmin):
+    form = RendimentoPorPeriodoForm
+    list_display = ['periodo', 'total', 'vezes', 'medio', 'observacoes']
+    search_fields = ['observacoes']
+    exclude = ['excluido']
+    
+    def save_model(self, request, obj, form, change):
+        # FIXME setar o usuario_criacao apenas se for nulo
+        obj.usuario_criacao = request.user
+        obj.usuario_atualizacao = request.user
+        obj.save()
+
+    def get_queryset(self, request):
+        qs = super(RendimentoPorPeriodoAdmin, self).get_queryset(request)
+        return qs.filter(excluido=False)
+    
+admin.site.register(RendimentoPorPeriodo, RendimentoPorPeriodoAdmin)
+
+class ConfiguracaoAdmin(admin.ModelAdmin):
+    form = ConfiguracaoForm
+    list_display = ['chave', 'valor', 'observacoes', 'ativo']
+    search_fields = ['chave', 'valor', 'observacoes']
+    exclude = ['excluido']
+    
+    def save_model(self, request, obj, form, change):
+        obj.usuario_criacao = request.user
+        obj.usuario_atualizacao = request.user
+        obj.save()
+    
+    def get_queryset(self, request):
+        qs = super(ConfiguracaoAdmin, self).get_queryset(request)
+        return qs.filter(excluido=False)
+
+admin.site.register(Configuracao, ConfiguracaoAdmin)
