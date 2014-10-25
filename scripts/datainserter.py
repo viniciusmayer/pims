@@ -92,7 +92,7 @@ def insertRendimento(connection, cursor):
         count = 0
         for row in scriptFile:
             cursor.execute(row.format(ids[count]))
-            count+=1
+            count += 1
         scriptFile.close()
         connection.commit()
     except Exception as e:

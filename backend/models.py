@@ -162,7 +162,7 @@ class Analise(CommonInfo):
         return str(self.periodo)
     
 class Rendimento(CommonInfo):
-    conta = models.ForeignKey(Conta, limit_choices_to={'ativo':True, 'excluido':False}, related_name = 'rendimento_conta')
+    conta = models.ForeignKey(Conta, limit_choices_to={'ativo':True, 'excluido':False}, related_name='rendimento_conta')
         
     class Meta:
         ordering = ['-ativo', '-data_hora_atualizacao', '-data_hora_criacao']
@@ -228,7 +228,7 @@ class RendimentoPorPeriodo(CommonInfo):
 
     def total(self):
         total = None
-        pontos = Ponto.objects.filter(periodo=self.periodo, conta__rendimento = True)
+        pontos = Ponto.objects.filter(periodo=self.periodo, conta__rendimento=True)
         for ponto in pontos:
             diferenca = ponto.diferenca()
             if (not diferenca is None):
@@ -240,7 +240,7 @@ class RendimentoPorPeriodo(CommonInfo):
         return total
     
     def vezes(self):
-        pontos = Ponto.objects.filter(periodo=self.periodo, conta__rendimento = True)
+        pontos = Ponto.objects.filter(periodo=self.periodo, conta__rendimento=True)
         count = None
         for ponto in pontos:
             diferenca = ponto.diferenca()

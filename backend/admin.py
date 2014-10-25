@@ -127,7 +127,7 @@ class MovimentoAdmin(admin.ModelAdmin):
     list_display = ['operacao', 'valor', 'periodo', 'nome_local', 'nome_tipo', 'nome_conta', 'observacoes']
     list_filter = ['operacao', 'ponto__conta__local', 'ponto__conta__tipo', 'ponto__conta__nome']
     search_fields = ['observacoes']
-    #date_hierarchy = 'periodo'
+    # date_hierarchy = 'periodo'
     exclude = ['excluido']
     
     def save_model(self, request, obj, form, change):
