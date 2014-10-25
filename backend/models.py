@@ -115,6 +115,21 @@ class Movimento(CommonInfo):
         if (self.operacao is 'DE'):
             return '{0}{1} {2}'.format('-', self.valor, self.ponto)
         return '{0} {1}'.format(self.valor, self.ponto)
+
+    def periodo(self):
+        return self.ponto.periodo
+
+    def nome_conta(self):
+        return self.ponto.nome_conta()
+    nome_conta.short_description = 'Conta'
+    
+    def nome_local(self):
+        return self.ponto.nome_local()
+    nome_local.short_description = 'Local'
+    
+    def nome_tipo(self):
+        return self.ponto.nome_tipo()
+    nome_tipo.short_description = 'Tipo'
     
 class Analise(CommonInfo):
     periodo = models.DateField(default=datetime.now())
@@ -151,6 +166,18 @@ class Rendimento(CommonInfo):
         
     class Meta:
         ordering = ['-ativo', '-data_hora_atualizacao', '-data_hora_criacao']
+
+    def nome_conta(self):
+        return self.conta.nome
+    nome_conta.short_description = 'Conta'
+    
+    def nome_local(self):
+        return self.conta.local.nome
+    nome_local.short_description = 'Local'
+    
+    def nome_tipo(self):
+        return self.conta.tipo.nome
+    nome_tipo.short_description = 'Tipo'
 
     def total(self):
         total = None
@@ -197,7 +224,7 @@ class RendimentoPorPeriodo(CommonInfo):
     periodo = models.DateField(default=datetime.now())
             
     class Meta:
-        ordering = ['-ativo', '-data_hora_atualizacao', '-data_hora_criacao']
+        ordering = ['-ativo', '-periodo', '-data_hora_atualizacao', '-data_hora_criacao']
 
     def total(self):
         total = None

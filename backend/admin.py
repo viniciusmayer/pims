@@ -124,9 +124,10 @@ admin.site.register(Periodo, PeriodoAdmin)
 
 class MovimentoAdmin(admin.ModelAdmin):
     form = MovimentoForm
-    list_display = ['operacao', 'valor', 'ponto', 'observacoes']
-    list_filter = ['operacao']
+    list_display = ['operacao', 'valor', 'periodo', 'nome_local', 'nome_tipo', 'nome_conta', 'observacoes']
+    list_filter = ['operacao', 'ponto__conta__local', 'ponto__conta__tipo', 'ponto__conta__nome']
     search_fields = ['observacoes']
+    #date_hierarchy = 'periodo'
     exclude = ['excluido']
     
     def save_model(self, request, obj, form, change):
@@ -143,7 +144,8 @@ admin.site.register(Movimento, MovimentoAdmin)
 
 class RendimentoAdmin(admin.ModelAdmin):
     form = RendimentoForm
-    list_display = ['conta', 'total', 'vezes', 'medio', 'mediaPercentual', 'observacoes']
+    list_display = ['nome_local', 'nome_tipo', 'nome_conta', 'total', 'vezes', 'medio', 'mediaPercentual', 'observacoes']
+    list_filter = ['conta__local', 'conta__tipo']
     search_fields = ['observacoes']
     exclude = ['excluido']
     
@@ -163,6 +165,7 @@ class RendimentoPorPeriodoAdmin(admin.ModelAdmin):
     form = RendimentoPorPeriodoForm
     list_display = ['periodo', 'total', 'vezes', 'medio', 'observacoes']
     search_fields = ['observacoes']
+    date_hierarchy = 'periodo'
     exclude = ['excluido']
     
     def save_model(self, request, obj, form, change):
@@ -180,6 +183,7 @@ admin.site.register(RendimentoPorPeriodo, RendimentoPorPeriodoAdmin)
 class ConfiguracaoAdmin(admin.ModelAdmin):
     form = ConfiguracaoForm
     list_display = ['chave', 'valor', 'observacoes', 'ativo']
+    list_filter = ['ativo']
     search_fields = ['chave', 'valor', 'observacoes']
     exclude = ['excluido']
     
