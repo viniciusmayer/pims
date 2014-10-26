@@ -21,7 +21,6 @@ class Tipo(CommonInfo):
 
 class Local(CommonInfo):
     nome = models.CharField(max_length=255)
-
     tipo = models.ForeignKey(Tipo, limit_choices_to={'ativo':True, 'excluido':False, 'categoria':'LO'})
 
     class Meta:
@@ -225,6 +224,7 @@ class RendimentoPorPeriodo(CommonInfo):
             
     class Meta:
         ordering = ['-ativo', '-periodo', '-data_hora_atualizacao', '-data_hora_criacao']
+        verbose_name_plural = 'rendimentos por periodo'
 
     def total(self):
         total = None
