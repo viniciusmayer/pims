@@ -160,6 +160,41 @@ class Analise(CommonInfo):
     def __str__(self):
         return str(self.periodo)
     
+class AnalisePorPeriodo(CommonInfo):
+    periodo = models.DateField(default=datetime.now())
+
+    class Meta:
+        ordering = ['-ativo', '-periodo', '-data_hora_atualizacao', '-data_hora_criacao']
+        verbose_name_plural = 'analises por periodo'
+
+    def diferenca(self):
+        analise = Analise.objects.get(periodo = self.periodo)
+        return analise.diferenca()
+
+    def rendimento(self):
+        rendimento = RendimentoPorPeriodo.objects.get(periodo = self.periodo)
+        return rendimento.total()
+    
+    def resultado(self):
+        resultado = None
+        diferenca = self.diferenca()
+        total = self.rendimento()
+        if ((not diferenca is None) and (not total is None)):
+            resultado = diferenca - total
+        return resultado
+
+    def resultadoPercentual(self):
+        resultado = None
+        diferenca = self.diferenca()
+        total = self.rendimento()
+        if ((not diferenca is None) and (not total is None)):
+            resultado = round(((diferenca / total) - 1), 2)
+        return resultado
+    resultadoPercentual.short_description = 'resultado percentual'
+
+    def __str__(self):
+        return str(self.periodo)
+
 class Rendimento(CommonInfo):
     conta = models.ForeignKey(Conta, limit_choices_to={'ativo':True, 'excluido':False}, related_name='rendimento_conta')
         

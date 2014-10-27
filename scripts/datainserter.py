@@ -100,14 +100,28 @@ def insertRendimento(connection, cursor):
 
 insertRendimentoPorPeriodoSQL = 'insert into backend_rendimentoporperiodo(observacoes, ativo, excluido, data_hora_criacao, usuario_criacao_id, data_hora_atualizacao, usuario_atualizacao_id, periodo)'\
             ' values (''\'imported''\', true, false, now(), (select id from auth_user'\
-            ' where email = ''\'viniciusmayer@gmail.com''\'), now(), (select id from auth_user'\
-            '     where email = ''\'viniciusmayer@gmail.com''\'), {0});'
+            '     where email = ''\'viniciusmayer@gmail.com''\'), now(), (select id from auth_user'\
+            '         where email = ''\'viniciusmayer@gmail.com''\'), {0});'
 def insertRendimentoPorPeriodo(connection, cursor):
     try:
         cursor.execute('select distinct periodo from backend_ponto')
         for row in cursor.fetchall():
             split = str(row[0]).split('-')
             cursor.execute(insertRendimentoPorPeriodoSQL.format("'{0}'".format(date(int(split[0]), int(split[1]), int(split[2])))))
+        connection.commit()
+    except Exception as e:
+        print(e)
+
+insertAnalisePorPeriodoSQL = 'INSERT INTO backend_analiseporperiodo (observacoes, ativo, excluido, data_hora_criacao, usuario_criacao_id, data_hora_atualizacao, usuario_atualizacao_id, periodo)'\
+            ' values (''\'imported''\', true, false, now(), (select id from auth_user'\
+            '     where email = ''\'viniciusmayer@gmail.com''\'), now(), (select id from auth_user'\
+            '         where email = ''\'viniciusmayer@gmail.com''\'), {0});'
+def insertAnalisePorPeriodo(connection, cursor):
+    try:
+        cursor.execute('select distinct periodo from backend_ponto')
+        for row in cursor.fetchall():
+            split = str(row[0]).split('-')
+            cursor.execute(insertAnalisePorPeriodoSQL.format("'{0}'".format(date(int(split[0]), int(split[1]), int(split[2])))))
         connection.commit()
     except Exception as e:
         print(e)
@@ -139,6 +153,9 @@ try:
     
     print('insertRendimentoPorPeriodo')
     insertRendimentoPorPeriodo(connection, cursor)
+    
+    print('insertAnalisePorPeriodo')
+    insertAnalisePorPeriodo(connection, cursor)
 except Exception as e:
     print(e)
 
