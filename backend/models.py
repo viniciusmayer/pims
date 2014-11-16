@@ -108,7 +108,7 @@ class Movimento(CommonInfo):
     ponto = models.ForeignKey(Ponto, limit_choices_to={'ativo':True, 'excluido':False})
     
     class Meta:
-        ordering = ['-ativo', '-data_hora_atualizacao', '-data_hora_criacao']
+        ordering = ['-ativo', '-ponto__periodo', '-data_hora_atualizacao', '-data_hora_criacao']
     
     def __str__(self):
         if (self.operacao is 'DE'):
