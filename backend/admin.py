@@ -10,7 +10,7 @@ from backend.models import Ponto, Tipo, Local, Conta, Analise, Periodo, \
 class PontoAdmin(admin.ModelAdmin):
     form = PontoForm
     list_display = ['valor', 'periodo', 'nome_local', 'nome_tipo', 'nome_conta', 'diferenca', 'diferencaPercentual', 'pontoAnterior', 'observacoes']
-    list_filter = ['conta__local', 'conta__tipo', 'conta__nome']
+    list_filter = ['conta__rendimento', 'conta__local', 'conta__tipo', 'conta__nome']
     search_fields = ['valor', 'observacoes']
     date_hierarchy = 'periodo'
     exclude = ['excluido']
