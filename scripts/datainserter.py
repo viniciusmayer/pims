@@ -19,6 +19,7 @@ def importFiles(connection, cursor):
     for _file in files:
         try:
             scriptFile = open(_file, 'r')
+            print(scriptFile)
             script = scriptFile.read()
             scriptFile.close()
             cursor.execute(script)
@@ -130,7 +131,7 @@ def insertAnalisePorPeriodo(connection, cursor):
 print('start')
 try:
     print('connection')
-    connection = psycopg2.connect('dbname=''pims'' user=''eleonorvinicius'' host=''localhost'' password=''viniciusmayer''')
+    connection = psycopg2.connect('dbname=''pims'' user=''pims'' host=''localhost'' password=''viniciusmayer''')
     cursor = connection.cursor()
     
     print('truncateTables')

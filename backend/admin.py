@@ -139,7 +139,7 @@ class PeriodoAdmin(admin.ModelAdmin):
         qs = super(PeriodoAdmin, self).get_queryset(request)
         return qs.filter(excluido=False)
     
-admin.site.register(Periodo, PeriodoAdmin)
+#admin.site.register(Periodo, PeriodoAdmin)
 
 class MovimentoAdmin(admin.ModelAdmin):
     form = MovimentoForm

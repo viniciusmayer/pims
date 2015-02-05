@@ -1,7 +1,6 @@
 import csv
 from datetime import date
 
-
 selectUsuario = '(select id from auth_user where email = ''\'viniciusmayer@gmail.com''\')'
 selectTipo = '(select id from backend_tipo where nome = ''\'{0}''\')'
 selectLocal = '(select id from backend_local where nome = ''\'{0}''\')'
@@ -15,9 +14,9 @@ insertIntoLocal = 'INSERT INTO backend_local(nome, observacoes, ativo, excluido,
                         'data_hora_criacao, usuario_criacao_id, data_hora_atualizacao, usuario_atualizacao_id, tipo_id)'\
                   ' VALUES (''\'{0}''\', ''\'imported''\', true, false, now(), {1}, now(), {1}, {2});'
                
-insertIntoConta = 'INSERT INTO backend_conta(nome, observacoes, ativo, excluido,'\
+insertIntoConta = 'INSERT INTO backend_conta(nome, observacoes, ativo, excluido, rendimento,'\
                         'data_hora_criacao, usuario_criacao_id, data_hora_atualizacao, usuario_atualizacao_id, local_id, tipo_id)'\
-                  ' VALUES (''\'{0}''\', ''\'imported''\', true, false, now(), {1}, now(), {1}, {2}, {3});'
+                  ' VALUES (''\'{0}''\', ''\'imported''\', true, false, false, now(), {1}, now(), {1}, {2}, {3});'
                  
 insertIntoPonto = 'INSERT INTO backend_ponto(observacoes,ativo,excluido,data_hora_criacao,usuario_criacao_id,data_hora_atualizacao,usuario_atualizacao_id,'\
             'valor,'\
@@ -28,8 +27,7 @@ insertIntoPonto = 'INSERT INTO backend_ponto(observacoes,ativo,excluido,data_hor
             '{1},'\
             '{2});'
 
-print "start"
-origem = open("../files/EleonorVinicius-Financas.csv", 'rb')
+print("start")
 insertIntoTipoSql = open("insert_into_tipo.sql", 'a')
 insertIntoTipoSql.seek(0)
 insertIntoTipoSql.truncate()
@@ -50,6 +48,7 @@ tipos = list()
 locais = list()
 
 try:
+    origem = open("../files/EleonorVinicius-Financas-2014.csv", 'rt')
     reader = csv.reader(origem)
     for rows in reader:
         for row in rows:
@@ -67,7 +66,7 @@ try:
 
             if (not local in locais):
                 locais.append(local)
-                insertIntoLocalFormated = insertIntoLocal.format(local, selectUsuario, selectTipo.format('conta corrente'))
+                insertIntoLocalFormated = insertIntoLocal.format(local, selectUsuario, selectTipo.format('conta'))
                 insertIntoLocalSql.write(insertIntoLocalFormated)
                 insertIntoLocalSql.write('\n')
                 
@@ -76,7 +75,7 @@ try:
             insertIntoContaSql.write(insertIntoContaFormated)
             insertIntoContaSql.write('\n')                
             
-            for x in range(0, 10):
+            for x in range(0, 11):
                 if (cels[x + 3] != '-'):
                     p = (cels[x + 3], "'{0}'".format(date(2014, (x + 1), 15)), selectConta.format(selectLocal.format(local), selectTipo.format(tipo), conta))
                     insertIntoPontoSql.write(insertIntoPonto.format(*p))
@@ -89,4 +88,4 @@ finally:
     insertIntoContaSql.close()
     insertIntoPontoSql.close()
 
-print "end"
+print("end")
