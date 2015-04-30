@@ -55,13 +55,13 @@ class Periodo(CommonInfo):
     
 class Ponto(CommonInfo):
     valor = models.DecimalField(max_digits=9, decimal_places=2)
-    periodo = models.DateField(default=datetime.now())
 
+    periodo = models.ForeignKey(Periodo, limit_choices_to={'ativo':True, 'excluido':False})
     pontoAnterior = models.ForeignKey('self', null=True, blank=True, on_delete=models.SET_NULL, limit_choices_to={'ativo':True, 'excluido':False})
     conta = models.ForeignKey(Conta, limit_choices_to={'ativo':True, 'excluido':False})
     
     class Meta:
-        ordering = ['-ativo', '-periodo', '-data_hora_atualizacao', '-data_hora_criacao']
+        ordering = ['-ativo', '-periodo__data', '-data_hora_atualizacao', '-data_hora_criacao']
         
     def nome_conta(self):
         return self.conta.nome
@@ -95,7 +95,7 @@ class Ponto(CommonInfo):
     diferencaPercentual.short_description = 'diferenca percentual'
     
     def __str__(self):
-        return u'%s - %s - %s - %s' % (self.periodo, self.nome_local(), self.nome_tipo(), self.nome_conta())
+        return u'%s - %s - %s - %s' % (self.periodo.data, self.nome_local(), self.nome_tipo(), self.nome_conta())
 
 class Movimento(CommonInfo):
     OPERACAO = (
@@ -108,7 +108,7 @@ class Movimento(CommonInfo):
     ponto = models.ForeignKey(Ponto, limit_choices_to={'ativo':True, 'excluido':False})
     
     class Meta:
-        ordering = ['-ativo', '-ponto__periodo', '-data_hora_atualizacao', '-data_hora_criacao']
+        ordering = ['-ativo', '-ponto__periodo__data', '-data_hora_atualizacao', '-data_hora_criacao']
     
     def __str__(self):
         if (self.operacao is 'DE'):
@@ -131,15 +131,15 @@ class Movimento(CommonInfo):
     nome_tipo.short_description = 'Tipo'
     
 class Analise(CommonInfo):
-    periodo = models.DateField(default=datetime.now())
+    periodo = models.ForeignKey(Periodo, limit_choices_to={'ativo':True, 'excluido':False})
     analiseAnterior = models.ForeignKey('self', null=True, blank=True, on_delete=models.SET_NULL, limit_choices_to={'ativo':True, 'excluido':False})
     
     class Meta:
-        ordering = ['-ativo', '-periodo', '-data_hora_atualizacao', '-data_hora_criacao']
+        ordering = ['-ativo', '-periodo__data', '-data_hora_atualizacao', '-data_hora_criacao']
         
     def total(self):
         total = None
-        pontos = Ponto.objects.filter(periodo=self.periodo)
+        pontos = Ponto.objects.filter(periodo__data=self.periodo.data)
         for ponto in pontos:
             if (total is None):
                 total = 0
@@ -158,21 +158,21 @@ class Analise(CommonInfo):
     diferencaPercentual.short_description = 'diferenca percentual'
     
     def __str__(self):
-        return str(self.periodo)
+        return str(self.periodo.data)
     
 class AnalisePorPeriodo(CommonInfo):
-    periodo = models.DateField(default=datetime.now())
+    periodo = models.ForeignKey(Periodo, limit_choices_to={'ativo':True, 'excluido':False})
 
     class Meta:
-        ordering = ['-ativo', '-periodo', '-data_hora_atualizacao', '-data_hora_criacao']
+        ordering = ['-ativo', '-periodo__data', '-data_hora_atualizacao', '-data_hora_criacao']
         verbose_name_plural = 'analises por periodo'
 
     def diferenca(self):
-        analise = Analise.objects.get(periodo = self.periodo)
+        analise = Analise.objects.get(periodo__data = self.periodo.data)
         return analise.diferenca()
 
     def rendimento(self):
-        rendimento = RendimentoPorPeriodo.objects.get(periodo = self.periodo)
+        rendimento = RendimentoPorPeriodo.objects.get(periodo__data = self.periodo.data)
         return rendimento.total()
     
     def resultado(self):
@@ -193,7 +193,7 @@ class AnalisePorPeriodo(CommonInfo):
     resultadoPercentual.short_description = 'resultado percentual'
 
     def __str__(self):
-        return str(self.periodo)
+        return str(self.periodo.data)
 
 class Rendimento(CommonInfo):
     conta = models.ForeignKey(Conta, limit_choices_to={'ativo':True, 'excluido':False}, related_name='rendimento_conta')
@@ -255,15 +255,15 @@ class Rendimento(CommonInfo):
     mediaPercentual.short_description = 'media percentual'
 
 class RendimentoPorPeriodo(CommonInfo):
-    periodo = models.DateField(default=datetime.now())
+    periodo = models.ForeignKey(Periodo, limit_choices_to={'ativo':True, 'excluido':False})
             
     class Meta:
-        ordering = ['-ativo', '-periodo', '-data_hora_atualizacao', '-data_hora_criacao']
+        ordering = ['-ativo', '-periodo__data', '-data_hora_atualizacao', '-data_hora_criacao']
         verbose_name_plural = 'rendimentos por periodo'
 
     def total(self):
         total = None
-        pontos = Ponto.objects.filter(periodo=self.periodo, conta__rendimento=True)
+        pontos = Ponto.objects.filter(periodo__data=self.periodo.data, conta__rendimento=True)
         for ponto in pontos:
             diferenca = ponto.diferenca()
             if (not diferenca is None):
@@ -275,7 +275,7 @@ class RendimentoPorPeriodo(CommonInfo):
         return total
     
     def vezes(self):
-        pontos = Ponto.objects.filter(periodo=self.periodo, conta__rendimento=True)
+        pontos = Ponto.objects.filter(periodo__data=self.periodo.data, conta__rendimento=True)
         count = None
         for ponto in pontos:
             diferenca = ponto.diferenca()

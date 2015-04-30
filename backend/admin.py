@@ -12,13 +12,14 @@ class PontoAdmin(admin.ModelAdmin):
     list_display = ['valor', 'periodo', 'nome_local', 'nome_tipo', 'nome_conta', 'diferenca', 'diferencaPercentual', 'pontoAnterior', 'observacoes']
     list_filter = ['conta__rendimento', 'conta__local', 'conta__tipo', 'conta__nome']
     search_fields = ['valor', 'observacoes']
-    date_hierarchy = 'periodo'
-    exclude = ['excluido']
+    #date_hierarchy = 'periodo'
+    exclude = ['excluido', 'conta']
     
     def save_model(self, request, obj, form, change):
         # FIXME setar o usuario_criacao apenas se for nulo
         obj.usuario_criacao = request.user
         obj.usuario_atualizacao = request.user
+        obj.conta = obj.pontoAnterior.conta
         obj.save()
         
     def get_queryset(self, request):
@@ -88,7 +89,7 @@ class AnaliseAdmin(admin.ModelAdmin):
     form = AnaliseForm
     list_display = ['periodo', 'total', 'diferenca', 'diferencaPercentual', 'analiseAnterior', 'observacoes']
     search_fields = ['observacoes']
-    date_hierarchy = 'periodo'
+    #date_hierarchy = 'periodo'
     exclude = ['excluido']
     
     def save_model(self, request, obj, form, change):
@@ -107,7 +108,7 @@ class AnalisePorPeriodoAdmin(admin.ModelAdmin):
     form = AnalisePorPeriodoForm
     list_display = ['periodo', 'diferenca', 'rendimento', 'resultado', 'resultadoPercentual', 'observacoes']
     search_fields = ['observacoes']
-    date_hierarchy = 'periodo'
+    #date_hierarchy = 'periodo'
     exclude = ['excluido']
     
     def save_model(self, request, obj, form, change):
@@ -139,7 +140,7 @@ class PeriodoAdmin(admin.ModelAdmin):
         qs = super(PeriodoAdmin, self).get_queryset(request)
         return qs.filter(excluido=False)
     
-#admin.site.register(Periodo, PeriodoAdmin)
+admin.site.register(Periodo, PeriodoAdmin)
 
 class MovimentoAdmin(admin.ModelAdmin):
     form = MovimentoForm
@@ -184,7 +185,7 @@ class RendimentoPorPeriodoAdmin(admin.ModelAdmin):
     form = RendimentoPorPeriodoForm
     list_display = ['periodo', 'total', 'vezes', 'medio', 'observacoes']
     search_fields = ['observacoes']
-    date_hierarchy = 'periodo'
+    #date_hierarchy = 'periodoTempo__data'
     exclude = ['excluido']
     
     def save_model(self, request, obj, form, change):
