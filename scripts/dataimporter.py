@@ -1,6 +1,7 @@
 import csv
 from datetime import date
 
+
 selectUsuario = '(select id from auth_user where email = ''\'viniciusmayer@gmail.com''\')'
 selectTipo = '(select id from backend_tipo where nome = ''\'{0}''\')'
 selectLocal = '(select id from backend_local where nome = ''\'{0}''\')'

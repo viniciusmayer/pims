@@ -1,6 +1,8 @@
-from backend.models import Ponto, Periodo, Conta, Local, Tipo, Movimento
 from django.contrib.auth.models import User
 import uuid
+
+from backend.models import Ponto, Periodo, Conta, Local, Tipo, Movimento
+
 
 class UsuarioBuilder():
     usuario = None  # usarei o mesmo usuario para execucao de todos os testes

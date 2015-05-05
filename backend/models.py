@@ -41,7 +41,7 @@ class Conta(CommonInfo):
         ordering = ['-ativo', 'nome', '-data_hora_atualizacao', '-data_hora_criacao']
     
     def __str__(self):
-        return u'%s - %s - %s' % (self.local.nome, self.tipo.nome, self.nome)
+        return '%s - %s - %s' % (self.local.nome, self.tipo.nome, self.nome)
     
 class Periodo(CommonInfo):
     data = models.DateField(default=timezone.now())
@@ -97,7 +97,7 @@ class Ponto(CommonInfo):
     diferencaPercentual.short_description = 'diferenca percentual'
     
     def __str__(self):
-        return u'%s - %s - %s - %s' % (self.periodo.data, self.nome_local(), self.nome_tipo(), self.nome_conta())
+        return '%s - %s - %s - %s' % (self.periodo.data, self.nome_local(), self.nome_tipo(), self.nome_conta())
 
 class Movimento(CommonInfo):
     OPERACAO = (
