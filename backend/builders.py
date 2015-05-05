@@ -13,14 +13,6 @@ class UsuarioBuilder():
                                                          password='password',)
         return UsuarioBuilder.usuario
 
-    @staticmethod
-    def create(username, first_name='', last_name='', email=''):
-        return User.objects.create(username=username,
-                                   password='password',
-                                   first_name=first_name,
-                                   last_name=last_name,
-                                   email=email)
-
 class UUIDGenerator():
     @staticmethod
     def uuid():
