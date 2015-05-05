@@ -1,6 +1,6 @@
-from datetime import datetime
 from decimal import Decimal
 from django.db import models
+from django.utils import timezone
 
 from common.models import CommonInfo
 
@@ -44,12 +44,12 @@ class Conta(CommonInfo):
         return u'%s - %s - %s' % (self.local.nome, self.tipo.nome, self.nome)
     
 class Periodo(CommonInfo):
-    data = models.DateField(default=datetime.now())
+    data = models.DateField(default=timezone.now())
     periodoAnterior = models.ForeignKey('self', null=True, blank=True, on_delete=models.SET_NULL, limit_choices_to={'ativo':True, 'excluido':False})
     
     class Meta:
         ordering = ['-ativo', '-data', '-data_hora_atualizacao', '-data_hora_criacao']
-        
+
     def __str__(self):
         return str(self.data)    
     
@@ -75,6 +75,7 @@ class Ponto(CommonInfo):
         return self.conta.tipo.nome
     nome_tipo.short_description = 'Tipo'
 
+    #TODO testar 1º
     def diferenca(self):
         _diferenca = None
         if (not self.pontoAnterior is None):
@@ -88,6 +89,7 @@ class Ponto(CommonInfo):
                     _diferenca += movimento.valor
         return _diferenca
     
+    #TODO testar 2º
     def diferencaPercentual(self):
         if (not self.pontoAnterior is None):
             return round(((self.diferenca() / self.pontoAnterior.valor) * 100), 2)
@@ -133,10 +135,11 @@ class Movimento(CommonInfo):
 class Analise(CommonInfo):
     periodo = models.ForeignKey(Periodo, limit_choices_to={'ativo':True, 'excluido':False})
     analiseAnterior = models.ForeignKey('self', null=True, blank=True, on_delete=models.SET_NULL, limit_choices_to={'ativo':True, 'excluido':False})
-    
+
     class Meta:
         ordering = ['-ativo', '-periodo__data', '-data_hora_atualizacao', '-data_hora_criacao']
         
+    #TODO testar
     def total(self):
         total = None
         pontos = Ponto.objects.filter(periodo__data=self.periodo.data)
@@ -146,11 +149,13 @@ class Analise(CommonInfo):
             total += ponto.valor
         return total
     
+    #TODO testar
     def diferenca(self):
         if (not self.analiseAnterior is None):
             return self.total() - self.analiseAnterior.total()
         return None
     
+    #TODO testar
     def diferencaPercentual(self):
         if (not self.analiseAnterior is None):
             return round(((self.diferenca() / self.analiseAnterior.total()) * 100), 2)
@@ -167,14 +172,17 @@ class AnalisePorPeriodo(CommonInfo):
         ordering = ['-ativo', '-periodo__data', '-data_hora_atualizacao', '-data_hora_criacao']
         verbose_name_plural = 'analises por periodo'
 
+    #TODO testar
     def diferenca(self):
         analise = Analise.objects.get(periodo__data = self.periodo.data)
         return analise.diferenca()
 
+    #TODO testar
     def rendimento(self):
         rendimento = RendimentoPorPeriodo.objects.get(periodo__data = self.periodo.data)
         return rendimento.total()
     
+    #TODO testar
     def resultado(self):
         resultado = None
         diferenca = self.diferenca()
@@ -183,6 +191,7 @@ class AnalisePorPeriodo(CommonInfo):
             resultado = diferenca - total
         return resultado
 
+    #TODO testar
     def resultadoPercentual(self):
         resultado = None
         diferenca = self.diferenca()
@@ -213,6 +222,7 @@ class Rendimento(CommonInfo):
         return self.conta.tipo.nome
     nome_tipo.short_description = 'Tipo'
 
+    #TODO testar
     def total(self):
         total = None
         pontos = Ponto.objects.filter(conta=self.conta)
@@ -224,6 +234,7 @@ class Rendimento(CommonInfo):
                 total += diferenca
         return round(total, 2)
     
+    #TODO testar
     def vezes(self):
         pontos = Ponto.objects.filter(conta=self.conta)
         count = 0
@@ -233,6 +244,7 @@ class Rendimento(CommonInfo):
                 count += 1
         return count
     
+    #TODO testar
     def medio(self):
         total = self.total()
         if (not total is None):
@@ -241,6 +253,7 @@ class Rendimento(CommonInfo):
         return None
     medio.short_description = 'media'
     
+    #TODO testar
     def mediaPercentual(self):
         total = None
         pontos = Ponto.objects.filter(conta=self.conta)
@@ -261,6 +274,7 @@ class RendimentoPorPeriodo(CommonInfo):
         ordering = ['-ativo', '-periodo__data', '-data_hora_atualizacao', '-data_hora_criacao']
         verbose_name_plural = 'rendimentos por periodo'
 
+    #TODO testar
     def total(self):
         total = None
         pontos = Ponto.objects.filter(periodo__data=self.periodo.data, conta__rendimento=True)
@@ -274,6 +288,7 @@ class RendimentoPorPeriodo(CommonInfo):
             total = round(total, 2)
         return total
     
+    #TODO testar
     def vezes(self):
         pontos = Ponto.objects.filter(periodo__data=self.periodo.data, conta__rendimento=True)
         count = None
@@ -285,6 +300,7 @@ class RendimentoPorPeriodo(CommonInfo):
                 count += 1
         return count
     
+    #TODO testar
     def medio(self):
         total = self.total()
         if (not total is None):
