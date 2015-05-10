@@ -11,7 +11,7 @@ class PontoAdmin(admin.ModelAdmin):
     form = PontoForm
     list_display = ['valor', 'periodo', 'nome_local', 'nome_tipo', 'nome_conta', 'diferenca', 'diferencaPercentual', 'pontoAnterior', 'observacoes']
     list_filter = ['conta__rendimento', 'conta__local', 'conta__tipo', 'conta__nome']
-    search_fields = ['valor', 'observacoes']
+    search_fields = ['periodo__data', 'valor', 'observacoes']
     #date_hierarchy = 'periodo'
     exclude = ['excluido', 'conta']
     
