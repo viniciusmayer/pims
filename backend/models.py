@@ -6,11 +6,11 @@ from common.models import CommonInfo
 
 
 class Tipo(CommonInfo):
-    CATEGORIA = (
-        ('CO', 'Conta'),
-        ('LO', 'Local'),
-    )
-    categoria = models.CharField(max_length=2, choices=CATEGORIA)
+    #CATEGORIA = (
+    #    ('CO', 'Conta'),
+    #    ('LO', 'Local'),
+    #)
+    #categoria = models.CharField(max_length=2, choices=CATEGORIA)
     nome = models.CharField(max_length=255)
     
     class Meta:
@@ -21,7 +21,7 @@ class Tipo(CommonInfo):
 
 class Local(CommonInfo):
     nome = models.CharField(max_length=255)
-    tipo = models.ForeignKey(Tipo, limit_choices_to={'ativo':True, 'excluido':False, 'categoria':'LO'})
+    #tipo = models.ForeignKey(Tipo, limit_choices_to={'ativo':True, 'excluido':False, 'categoria':'LO'})
 
     class Meta:
         ordering = ['-ativo', 'nome', '-data_hora_atualizacao', '-data_hora_criacao']
@@ -35,7 +35,8 @@ class Conta(CommonInfo):
     rendimento = models.BooleanField(default=False)
     
     local = models.ForeignKey(Local, limit_choices_to={'ativo':True, 'excluido':False})
-    tipo = models.ForeignKey(Tipo, limit_choices_to={'ativo':True, 'excluido':False, 'categoria':'CO'})
+    #tipo = models.ForeignKey(Tipo, limit_choices_to={'ativo':True, 'excluido':False, 'categoria':'CO'})
+    tipo = models.ForeignKey(Tipo, limit_choices_to={'ativo':True, 'excluido':False})
     
     class Meta:
         ordering = ['-ativo', 'nome', '-data_hora_atualizacao', '-data_hora_criacao']

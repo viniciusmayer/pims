@@ -13,13 +13,14 @@ class PontoAdmin(admin.ModelAdmin):
     list_filter = ['conta__rendimento', 'conta__local', 'conta__tipo', 'conta__nome']
     search_fields = ['periodo__data', 'valor', 'observacoes']
     #date_hierarchy = 'periodo'
-    exclude = ['excluido', 'conta']
+    exclude = ['excluido']
     
     def save_model(self, request, obj, form, change):
         # FIXME setar o usuario_criacao apenas se for nulo
         obj.usuario_criacao = request.user
         obj.usuario_atualizacao = request.user
-        obj.conta = obj.pontoAnterior.conta
+        if (not obj.pontoAnterior is None):
+            obj.conta = obj.pontoAnterior.conta
         obj.save()
         
     def get_queryset(self, request):
@@ -30,8 +31,9 @@ admin.site.register(Ponto, PontoAdmin)
 
 class TipoAdmin(admin.ModelAdmin):
     form = TipoForm
-    list_display = ['nome', 'categoria', 'observacoes']
-    list_filter = ['categoria']
+    #list_display = ['nome', 'categoria', 'observacoes']
+    list_display = ['nome', 'observacoes']
+    #list_filter = ['categoria']
     search_fields = ['nome', 'observacoes']
     exclude = ['excluido']
     
@@ -49,8 +51,9 @@ admin.site.register(Tipo, TipoAdmin)
 
 class LocalAdmin(admin.ModelAdmin):
     form = LocalForm
-    list_display = ['nome', 'tipo', 'observacoes']
-    list_filter = ['tipo']
+    #list_display = ['nome', 'tipo', 'observacoes']
+    list_display = ['nome', 'observacoes']
+    #list_filter = ['tipo']
     search_fields = ['nome', 'observacoes']
     exclude = ['excluido']
     
