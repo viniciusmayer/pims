@@ -6,6 +6,10 @@ from backend.forms import PontoForm, TipoForm, LocalForm, ContaForm, AnaliseForm
 from backend.models import Ponto, Tipo, Local, Conta, Analise, Periodo, \
     Movimento, Rendimento, Configuracao, RendimentoPorPeriodo, AnalisePorPeriodo
 
+from import_export import resources
+from import_export import fields
+from import_export.admin import ImportExportModelAdmin
+
 
 class PontoAdmin(admin.ModelAdmin):
     form = PontoForm
@@ -88,7 +92,30 @@ class ContaAdmin(admin.ModelAdmin):
     
 admin.site.register(Conta, ContaAdmin)
 
-class AnaliseAdmin(admin.ModelAdmin):
+class AnaliseResource(resources.ModelResource):
+    periodo = fields.Field()
+    total = fields.Field()
+    diferenca = fields.Field()
+    diferencaPercentual = fields.Field() 
+    
+    class Meta:
+        model = Analise
+        export_order = ('periodo', 'total', 'diferenca', 'diferencaPercentual')
+        
+    def dehydrate_periodo(self, analise):
+        return analise.periodo.data
+    
+    def dehydrate_total(self, analise):
+        return analise.total()
+    
+    def dehydrate_diferenca(self, analise):
+        return analise.diferenca()
+    
+    def dehydrate_diferencaPercentual(self, analise):
+        return analise.diferencaPercentual()
+
+class AnaliseAdmin(ImportExportModelAdmin):
+    resource_class = AnaliseResource
     form = AnaliseForm
     list_display = ['periodo', 'total', 'diferenca', 'diferencaPercentual', 'analiseAnterior', 'observacoes']
     search_fields = ['observacoes']
