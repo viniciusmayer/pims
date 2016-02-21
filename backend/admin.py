@@ -17,14 +17,17 @@ class PontoAdmin(admin.ModelAdmin):
     list_filter = ['conta__rendimento', 'conta__local', 'conta__tipo', 'conta__nome']
     search_fields = ['periodo__data', 'valor', 'observacoes']
     #date_hierarchy = 'periodo'
-    exclude = ['excluido']
+    exclude = ['excluido', 'pontoAnterior']
     
     def save_model(self, request, obj, form, change):
         # FIXME setar o usuario_criacao apenas se for nulo
         obj.usuario_criacao = request.user
         obj.usuario_atualizacao = request.user
-        if (not obj.pontoAnterior is None):
-            obj.conta = obj.pontoAnterior.conta
+        if (obj.pontoAnterior is None):
+            p = Periodo.objects.filter(data__lt=obj.periodo.data).latest('data')
+            pa = Ponto.objects.get(conta=obj.conta, periodo=p)
+            if (not pa is None):
+                obj.pontoAnterior = pa
         obj.save()
         
     def get_queryset(self, request):

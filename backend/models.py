@@ -45,7 +45,7 @@ class Conta(CommonInfo):
         return '%s - %s - %s' % (self.local.nome, self.tipo.nome, self.nome)
     
 class Periodo(CommonInfo):
-    data = models.DateField(default=timezone.now())
+    data = models.DateField(default=timezone.now)
     periodoAnterior = models.ForeignKey('self', null=True, blank=True, on_delete=models.SET_NULL, limit_choices_to={'ativo':True, 'excluido':False})
     
     class Meta:
