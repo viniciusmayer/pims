@@ -23,17 +23,21 @@ class PontoAdmin(admin.ModelAdmin):
         # FIXME setar o usuario_criacao apenas se for nulo
         obj.usuario_criacao = request.user
         obj.usuario_atualizacao = request.user
-        if (obj.pontoAnterior is None):
-            p = Periodo.objects.filter(data__lt=obj.periodo.data).latest('data')
-            pa = Ponto.objects.get(conta=obj.conta, periodo=p)
-            if (not pa is None):
-                obj.pontoAnterior = pa
+        p = Periodo.objects.filter(data__lt=obj.periodo.data).latest('data')
+        pa = Ponto.objects.get(conta=obj.conta, periodo=p)
+        if (not pa is None):
+            obj.pontoAnterior = pa
         obj.save()
         
     def get_queryset(self, request):
         qs = super(PontoAdmin, self).get_queryset(request)
         return qs.filter(excluido=False)
-
+    
+    def formfield_for_foreignkey(self, db_field, request, **kwargs):
+        if db_field.name == "conta":
+            kwargs["queryset"] = Conta.objects.order_by('local__nome', 'tipo__nome', 'nome')
+        return super(PontoAdmin, self).formfield_for_foreignkey(db_field, request, **kwargs)
+    
 admin.site.register(Ponto, PontoAdmin)
 
 class TipoAdmin(admin.ModelAdmin):
