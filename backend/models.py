@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from decimal import Decimal
 from django.db import models
 from django.utils import timezone
@@ -189,8 +190,8 @@ class AnalisePorPeriodo(CommonInfo):
         diferenca = self.diferenca()
         total = self.rendimento()
         if ((not diferenca is None) and (not total is None)):
-            resultado = diferenca - total
-        return resultado
+            resultado = diferenca - Decimal(total)
+        return round(resultado, 2)
 
     #TODO testar
     def resultadoPercentual(self):
@@ -198,7 +199,7 @@ class AnalisePorPeriodo(CommonInfo):
         diferenca = self.diferenca()
         total = self.rendimento()
         if ((not diferenca is None) and (not total is None)):
-            resultado = round(((diferenca / total) - 1), 2)
+            resultado = round(((diferenca / Decimal(total)) - 1), 2)
         return resultado
     resultadoPercentual.short_description = 'resultado percentual'
 
@@ -263,7 +264,7 @@ class Rendimento(CommonInfo):
                 total = Decimal(0)
             dif = ponto.diferencaPercentual()
             if (not dif is None):
-                total += ponto.diferencaPercentual()
+                total += Decimal(dif)
         total /= self.vezes()
         return round(total, 2)
     mediaPercentual.short_description = 'media percentual'
