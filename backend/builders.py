@@ -54,7 +54,7 @@ class LocalBuilder():
     def create(nome):
         return Local.objects.create(
             nome=nome,
-            tipo=TipoBuilder.create(UUIDGenerator.uuid()),
+            #tipo=TipoBuilder.create(UUIDGenerator.uuid()),
             usuario_criacao=UsuarioBuilder.sessionUser(),
             usuario_atualizacao=UsuarioBuilder.sessionUser(),)
 
@@ -62,7 +62,7 @@ class TipoBuilder():
     @staticmethod
     def create(nome):
         return Tipo.objects.create(nome=nome,
-            categoria='CO',
+            #categoria='CO',
             usuario_criacao=UsuarioBuilder.sessionUser(),
             usuario_atualizacao=UsuarioBuilder.sessionUser(),)
         

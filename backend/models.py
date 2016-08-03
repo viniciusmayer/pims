@@ -94,7 +94,7 @@ class Ponto(CommonInfo):
     #TODO testar 2º
     def diferencaPercentual(self):
         if (not self.pontoAnterior is None):
-            return round(((self.diferenca() / self.pontoAnterior.valor) * 100), 2)
+            return round(((self.diferenca() / Decimal(self.pontoAnterior.valor)) * 100), 2)
         return None
     diferencaPercentual.short_description = 'diferenca percentual'
     
