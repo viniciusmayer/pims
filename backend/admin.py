@@ -16,7 +16,6 @@ class PontoAdmin(admin.ModelAdmin):
     list_display = ['valor', 'periodo', 'nome_local', 'nome_tipo', 'nome_conta', 'diferenca', 'diferencaPercentual', 'pontoAnterior', 'observacoes']
     list_filter = ['conta__rendimento', 'conta__local', 'conta__tipo', 'conta__nome']
     search_fields = ['periodo__data', 'valor', 'observacoes']
-    #date_hierarchy = 'periodo'
     exclude = ['excluido', 'pontoAnterior']
     
     def save_model(self, request, obj, form, change):
@@ -42,9 +41,7 @@ admin.site.register(Ponto, PontoAdmin)
 
 class TipoAdmin(admin.ModelAdmin):
     form = TipoForm
-    #list_display = ['nome', 'categoria', 'observacoes']
     list_display = ['nome', 'observacoes']
-    #list_filter = ['categoria']
     search_fields = ['nome', 'observacoes']
     exclude = ['excluido']
     
@@ -62,9 +59,7 @@ admin.site.register(Tipo, TipoAdmin)
 
 class LocalAdmin(admin.ModelAdmin):
     form = LocalForm
-    #list_display = ['nome', 'tipo', 'observacoes']
     list_display = ['nome', 'observacoes']
-    #list_filter = ['tipo']
     search_fields = ['nome', 'observacoes']
     exclude = ['excluido']
     
@@ -126,7 +121,6 @@ class AnaliseAdmin(ImportExportModelAdmin):
     form = AnaliseForm
     list_display = ['periodo', 'total', 'diferenca', 'diferencaPercentual', 'analiseAnterior', 'observacoes']
     search_fields = ['observacoes']
-    #date_hierarchy = 'periodo'
     exclude = ['excluido']
     
     def save_model(self, request, obj, form, change):
@@ -145,7 +139,6 @@ class AnalisePorPeriodoAdmin(admin.ModelAdmin):
     form = AnalisePorPeriodoForm
     list_display = ['periodo', 'diferenca', 'rendimento', 'resultado', 'resultadoPercentual', 'observacoes']
     search_fields = ['observacoes']
-    #date_hierarchy = 'periodo'
     exclude = ['excluido']
     
     def save_model(self, request, obj, form, change):
@@ -184,7 +177,6 @@ class MovimentoAdmin(admin.ModelAdmin):
     list_display = ['operacao', 'valor', 'periodo', 'nome_local', 'nome_tipo', 'nome_conta', 'observacoes']
     list_filter = ['operacao', 'ponto__conta__local', 'ponto__conta__tipo', 'ponto__conta__nome']
     search_fields = ['observacoes']
-    # date_hierarchy = 'periodo'
     exclude = ['excluido']
     
     def save_model(self, request, obj, form, change):
@@ -222,7 +214,6 @@ class RendimentoPorPeriodoAdmin(admin.ModelAdmin):
     form = RendimentoPorPeriodoForm
     list_display = ['periodo', 'total', 'vezes', 'medio', 'observacoes']
     search_fields = ['observacoes']
-    #date_hierarchy = 'periodoTempo__data'
     exclude = ['excluido']
     
     def save_model(self, request, obj, form, change):
