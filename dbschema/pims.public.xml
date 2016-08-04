@@ -1,0 +1,525 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<database name="pims" schema="public" type="PostgreSQL - 9.4.7">
+   <tables>
+      <table name="auth_group" numRows="0" remarks="" schema="public" type="TABLE">
+         <column autoUpdated="true" defaultValue="nextval('auth_group_id_seq'::regclass)" digits="0" id="0" name="id" nullable="false" remarks="" size="10" type="serial">
+            <child column="group_id" foreignKey="auth_group_permissio_group_id_7a53620680b71e22_fk_auth_group_id" implied="false" onDeleteCascade="false" table="auth_group_permissions"/>
+            <child column="group_id" foreignKey="auth_user_groups_group_id_f95881eab746a41_fk_auth_group_id" implied="false" onDeleteCascade="false" table="auth_user_groups"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="1" name="name" nullable="false" remarks="" size="80" type="varchar"/>
+         <primaryKey column="id" sequenceNumberInPK="1"/>
+         <index name="auth_group_pkey" unique="true">
+            <column ascending="true" name="id"/>
+         </index>
+         <index name="auth_group_name_18631326ea3ef012_like" unique="false">
+            <column ascending="true" name="name"/>
+         </index>
+         <index name="auth_group_name_key" unique="true">
+            <column ascending="true" name="name"/>
+         </index>
+      </table>
+      <table name="auth_group_permissions" numRows="0" remarks="" schema="public" type="TABLE">
+         <column autoUpdated="true" defaultValue="nextval('auth_group_permissions_id_seq'::regclass)" digits="0" id="0" name="id" nullable="false" remarks="" size="10" type="serial"/>
+         <column autoUpdated="false" digits="0" id="1" name="group_id" nullable="false" remarks="" size="10" type="int4">
+            <parent column="id" foreignKey="auth_group_permissio_group_id_7a53620680b71e22_fk_auth_group_id" implied="false" onDeleteCascade="false" table="auth_group"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="2" name="permission_id" nullable="false" remarks="" size="10" type="int4">
+            <parent column="id" foreignKey="auth_group_permission_id_5a9b6a8542219f5d_fk_auth_permission_id" implied="false" onDeleteCascade="false" table="auth_permission"/>
+         </column>
+         <primaryKey column="id" sequenceNumberInPK="1"/>
+         <index name="auth_group_permissions_pkey" unique="true">
+            <column ascending="true" name="id"/>
+         </index>
+         <index name="auth_group_permissions_0e939a4f" unique="false">
+            <column ascending="true" name="group_id"/>
+         </index>
+         <index name="auth_group_permissions_8373b171" unique="false">
+            <column ascending="true" name="permission_id"/>
+         </index>
+         <index name="auth_group_permissions_group_id_permission_id_key" unique="true">
+            <column ascending="true" name="group_id"/>
+            <column ascending="true" name="permission_id"/>
+         </index>
+      </table>
+      <table name="auth_permission" numRows="51" remarks="" schema="public" type="TABLE">
+         <column autoUpdated="true" defaultValue="nextval('auth_permission_id_seq'::regclass)" digits="0" id="0" name="id" nullable="false" remarks="" size="10" type="serial">
+            <child column="permission_id" foreignKey="auth_group_permission_id_5a9b6a8542219f5d_fk_auth_permission_id" implied="false" onDeleteCascade="false" table="auth_group_permissions"/>
+            <child column="permission_id" foreignKey="auth_user__permission_id_2bdccb70e4f5bf25_fk_auth_permission_id" implied="false" onDeleteCascade="false" table="auth_user_user_permissions"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="1" name="name" nullable="false" remarks="" size="255" type="varchar"/>
+         <column autoUpdated="false" digits="0" id="2" name="content_type_id" nullable="false" remarks="" size="10" type="int4">
+            <parent column="id" foreignKey="auth_content_type_id_4d7bb97471f1a36c_fk_django_content_type_id" implied="false" onDeleteCascade="false" table="django_content_type"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="3" name="codename" nullable="false" remarks="" size="100" type="varchar"/>
+         <primaryKey column="id" sequenceNumberInPK="1"/>
+         <index name="auth_permission_pkey" unique="true">
+            <column ascending="true" name="id"/>
+         </index>
+         <index name="auth_permission_417f1b1c" unique="false">
+            <column ascending="true" name="content_type_id"/>
+         </index>
+         <index name="auth_permission_content_type_id_codename_key" unique="true">
+            <column ascending="true" name="content_type_id"/>
+            <column ascending="true" name="codename"/>
+         </index>
+      </table>
+      <table name="auth_user" numRows="1" remarks="" schema="public" type="TABLE">
+         <column autoUpdated="true" defaultValue="nextval('auth_user_id_seq'::regclass)" digits="0" id="0" name="id" nullable="false" remarks="" size="10" type="serial">
+            <child column="user_id" foreignKey="auth_user_groups_user_id_569691bbb34bbdbc_fk_auth_user_id" implied="false" onDeleteCascade="false" table="auth_user_groups"/>
+            <child column="user_id" foreignKey="auth_user_user_permiss_user_id_2c2a29bb97ec85e3_fk_auth_user_id" implied="false" onDeleteCascade="false" table="auth_user_user_permissions"/>
+            <child column="user_id" foreignKey="django_admin_log_user_id_4e98bd3103f9f6bf_fk_auth_user_id" implied="false" onDeleteCascade="false" table="django_admin_log"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="1" name="password" nullable="false" remarks="" size="128" type="varchar"/>
+         <column autoUpdated="false" digits="6" id="2" name="last_login" nullable="true" remarks="" size="35" type="timestamptz"/>
+         <column autoUpdated="false" digits="0" id="3" name="is_superuser" nullable="false" remarks="" size="1" type="bool"/>
+         <column autoUpdated="false" digits="0" id="4" name="username" nullable="false" remarks="" size="30" type="varchar"/>
+         <column autoUpdated="false" digits="0" id="5" name="first_name" nullable="false" remarks="" size="30" type="varchar"/>
+         <column autoUpdated="false" digits="0" id="6" name="last_name" nullable="false" remarks="" size="30" type="varchar"/>
+         <column autoUpdated="false" digits="0" id="7" name="email" nullable="false" remarks="" size="254" type="varchar"/>
+         <column autoUpdated="false" digits="0" id="8" name="is_staff" nullable="false" remarks="" size="1" type="bool"/>
+         <column autoUpdated="false" digits="0" id="9" name="is_active" nullable="false" remarks="" size="1" type="bool"/>
+         <column autoUpdated="false" digits="6" id="10" name="date_joined" nullable="false" remarks="" size="35" type="timestamptz"/>
+         <primaryKey column="id" sequenceNumberInPK="1"/>
+         <index name="auth_user_pkey" unique="true">
+            <column ascending="true" name="id"/>
+         </index>
+         <index name="auth_user_username_20f9bd94bf1a2568_like" unique="false">
+            <column ascending="true" name="username"/>
+         </index>
+         <index name="auth_user_username_key" unique="true">
+            <column ascending="true" name="username"/>
+         </index>
+      </table>
+      <table name="auth_user_groups" numRows="0" remarks="" schema="public" type="TABLE">
+         <column autoUpdated="true" defaultValue="nextval('auth_user_groups_id_seq'::regclass)" digits="0" id="0" name="id" nullable="false" remarks="" size="10" type="serial"/>
+         <column autoUpdated="false" digits="0" id="1" name="user_id" nullable="false" remarks="" size="10" type="int4">
+            <parent column="id" foreignKey="auth_user_groups_user_id_569691bbb34bbdbc_fk_auth_user_id" implied="false" onDeleteCascade="false" table="auth_user"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="2" name="group_id" nullable="false" remarks="" size="10" type="int4">
+            <parent column="id" foreignKey="auth_user_groups_group_id_f95881eab746a41_fk_auth_group_id" implied="false" onDeleteCascade="false" table="auth_group"/>
+         </column>
+         <primaryKey column="id" sequenceNumberInPK="1"/>
+         <index name="auth_user_groups_pkey" unique="true">
+            <column ascending="true" name="id"/>
+         </index>
+         <index name="auth_user_groups_0e939a4f" unique="false">
+            <column ascending="true" name="group_id"/>
+         </index>
+         <index name="auth_user_groups_e8701ad4" unique="false">
+            <column ascending="true" name="user_id"/>
+         </index>
+         <index name="auth_user_groups_user_id_group_id_key" unique="true">
+            <column ascending="true" name="user_id"/>
+            <column ascending="true" name="group_id"/>
+         </index>
+      </table>
+      <table name="auth_user_user_permissions" numRows="0" remarks="" schema="public" type="TABLE">
+         <column autoUpdated="true" defaultValue="nextval('auth_user_user_permissions_id_seq'::regclass)" digits="0" id="0" name="id" nullable="false" remarks="" size="10" type="serial"/>
+         <column autoUpdated="false" digits="0" id="1" name="user_id" nullable="false" remarks="" size="10" type="int4">
+            <parent column="id" foreignKey="auth_user_user_permiss_user_id_2c2a29bb97ec85e3_fk_auth_user_id" implied="false" onDeleteCascade="false" table="auth_user"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="2" name="permission_id" nullable="false" remarks="" size="10" type="int4">
+            <parent column="id" foreignKey="auth_user__permission_id_2bdccb70e4f5bf25_fk_auth_permission_id" implied="false" onDeleteCascade="false" table="auth_permission"/>
+         </column>
+         <primaryKey column="id" sequenceNumberInPK="1"/>
+         <index name="auth_user_user_permissions_pkey" unique="true">
+            <column ascending="true" name="id"/>
+         </index>
+         <index name="auth_user_user_permissions_8373b171" unique="false">
+            <column ascending="true" name="permission_id"/>
+         </index>
+         <index name="auth_user_user_permissions_e8701ad4" unique="false">
+            <column ascending="true" name="user_id"/>
+         </index>
+         <index name="auth_user_user_permissions_user_id_permission_id_key" unique="true">
+            <column ascending="true" name="user_id"/>
+            <column ascending="true" name="permission_id"/>
+         </index>
+      </table>
+      <table name="backend_analise" numRows="68" remarks="" schema="public" type="TABLE">
+         <column autoUpdated="true" defaultValue="nextval('backend_analise_id_seq'::regclass)" digits="0" id="0" name="id" nullable="false" remarks="" size="10" type="serial">
+            <child column="analiseAnterior_id" foreignKey="backend_analise_analiseAnterior_id_fkey" implied="false" onDeleteCascade="false" table="backend_analise"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="1" name="observacoes" nullable="true" remarks="" size="255" type="varchar"/>
+         <column autoUpdated="false" digits="0" id="2" name="ativo" nullable="false" remarks="" size="1" type="bool"/>
+         <column autoUpdated="false" digits="0" id="3" name="excluido" nullable="false" remarks="" size="1" type="bool"/>
+         <column autoUpdated="false" digits="6" id="4" name="data_hora_criacao" nullable="false" remarks="" size="35" type="timestamptz"/>
+         <column autoUpdated="false" digits="0" id="5" name="usuario_criacao_id" nullable="false" remarks="" size="10" type="int4"/>
+         <column autoUpdated="false" digits="6" id="6" name="data_hora_atualizacao" nullable="false" remarks="" size="35" type="timestamptz"/>
+         <column autoUpdated="false" digits="0" id="7" name="usuario_atualizacao_id" nullable="false" remarks="" size="10" type="int4"/>
+         <column autoUpdated="false" digits="0" id="8" name="analiseAnterior_id" nullable="true" remarks="" size="10" type="int4">
+            <parent column="id" foreignKey="backend_analise_analiseAnterior_id_fkey" implied="false" onDeleteCascade="false" table="backend_analise"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="9" name="periodo_id" nullable="false" remarks="" size="10" type="int4">
+            <parent column="id" foreignKey="backend_anali_periodo_id_66263d406069d1b6_fk_backend_periodo_id" implied="false" onDeleteCascade="false" table="backend_periodo"/>
+         </column>
+         <primaryKey column="id" sequenceNumberInPK="1"/>
+         <index name="backend_analise_pkey" unique="true">
+            <column ascending="true" name="id"/>
+         </index>
+         <index name="backend_analise_analiseAnterior_id" unique="false">
+            <column ascending="true" name="analiseAnterior_id"/>
+         </index>
+         <index name="backend_analise_f67b36bb" unique="false">
+            <column ascending="true" name="periodo_id"/>
+         </index>
+         <index name="backend_analise_usuario_atualizacao_id" unique="false">
+            <column ascending="true" name="usuario_atualizacao_id"/>
+         </index>
+         <index name="backend_analise_usuario_criacao_id" unique="false">
+            <column ascending="true" name="usuario_criacao_id"/>
+         </index>
+      </table>
+      <table name="backend_analiseporperiodo" numRows="31" remarks="" schema="public" type="TABLE">
+         <column autoUpdated="true" defaultValue="nextval('backend_analiseporperiodo_id_seq'::regclass)" digits="0" id="0" name="id" nullable="false" remarks="" size="10" type="serial"/>
+         <column autoUpdated="false" digits="0" id="1" name="observacoes" nullable="true" remarks="" size="255" type="varchar"/>
+         <column autoUpdated="false" digits="0" id="2" name="ativo" nullable="false" remarks="" size="1" type="bool"/>
+         <column autoUpdated="false" digits="0" id="3" name="excluido" nullable="false" remarks="" size="1" type="bool"/>
+         <column autoUpdated="false" digits="6" id="4" name="data_hora_criacao" nullable="false" remarks="" size="35" type="timestamptz"/>
+         <column autoUpdated="false" digits="0" id="5" name="usuario_criacao_id" nullable="false" remarks="" size="10" type="int4"/>
+         <column autoUpdated="false" digits="6" id="6" name="data_hora_atualizacao" nullable="false" remarks="" size="35" type="timestamptz"/>
+         <column autoUpdated="false" digits="0" id="7" name="usuario_atualizacao_id" nullable="false" remarks="" size="10" type="int4"/>
+         <column autoUpdated="false" digits="0" id="8" name="periodo_id" nullable="false" remarks="" size="10" type="int4">
+            <parent column="id" foreignKey="backend_anali_periodo_id_7467d19c601cf6f1_fk_backend_periodo_id" implied="false" onDeleteCascade="false" table="backend_periodo"/>
+         </column>
+         <primaryKey column="id" sequenceNumberInPK="1"/>
+         <index name="backend_analiseporperiodo_pkey" unique="true">
+            <column ascending="true" name="id"/>
+         </index>
+         <index name="backend_analiseporperiodo_f67b36bb" unique="false">
+            <column ascending="true" name="periodo_id"/>
+         </index>
+         <index name="backend_analiseporperiodo_usuario_atualizacao_id" unique="false">
+            <column ascending="true" name="usuario_atualizacao_id"/>
+         </index>
+         <index name="backend_analiseporperiodo_usuario_criacao_id" unique="false">
+            <column ascending="true" name="usuario_criacao_id"/>
+         </index>
+      </table>
+      <table name="backend_configuracao" numRows="0" remarks="" schema="public" type="TABLE">
+         <column autoUpdated="true" defaultValue="nextval('backend_configuracao_id_seq'::regclass)" digits="0" id="0" name="id" nullable="false" remarks="" size="10" type="serial"/>
+         <column autoUpdated="false" digits="0" id="1" name="observacoes" nullable="true" remarks="" size="255" type="varchar"/>
+         <column autoUpdated="false" digits="0" id="2" name="ativo" nullable="false" remarks="" size="1" type="bool"/>
+         <column autoUpdated="false" digits="0" id="3" name="excluido" nullable="false" remarks="" size="1" type="bool"/>
+         <column autoUpdated="false" digits="6" id="4" name="data_hora_criacao" nullable="false" remarks="" size="35" type="timestamptz"/>
+         <column autoUpdated="false" digits="0" id="5" name="usuario_criacao_id" nullable="false" remarks="" size="10" type="int4"/>
+         <column autoUpdated="false" digits="6" id="6" name="data_hora_atualizacao" nullable="false" remarks="" size="35" type="timestamptz"/>
+         <column autoUpdated="false" digits="0" id="7" name="usuario_atualizacao_id" nullable="false" remarks="" size="10" type="int4"/>
+         <column autoUpdated="false" digits="0" id="8" name="chave" nullable="false" remarks="" size="255" type="varchar"/>
+         <column autoUpdated="false" digits="0" id="9" name="valor" nullable="false" remarks="" size="255" type="varchar"/>
+         <primaryKey column="id" sequenceNumberInPK="1"/>
+         <index name="backend_configuracao_pkey" unique="true">
+            <column ascending="true" name="id"/>
+         </index>
+         <index name="backend_configuracao_usuario_atualizacao_id" unique="false">
+            <column ascending="true" name="usuario_atualizacao_id"/>
+         </index>
+         <index name="backend_configuracao_usuario_criacao_id" unique="false">
+            <column ascending="true" name="usuario_criacao_id"/>
+         </index>
+      </table>
+      <table name="backend_conta" numRows="20" remarks="" schema="public" type="TABLE">
+         <column autoUpdated="true" defaultValue="nextval('backend_conta_id_seq'::regclass)" digits="0" id="0" name="id" nullable="false" remarks="" size="10" type="serial">
+            <child column="conta_id" foreignKey="backend_ponto_conta_id_fkey" implied="false" onDeleteCascade="false" table="backend_ponto"/>
+            <child column="conta_id" foreignKey="backend_rendimento_conta_id_fkey" implied="false" onDeleteCascade="false" table="backend_rendimento"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="1" name="observacoes" nullable="true" remarks="" size="255" type="varchar"/>
+         <column autoUpdated="false" digits="0" id="2" name="ativo" nullable="false" remarks="" size="1" type="bool"/>
+         <column autoUpdated="false" digits="0" id="3" name="excluido" nullable="false" remarks="" size="1" type="bool"/>
+         <column autoUpdated="false" digits="6" id="4" name="data_hora_criacao" nullable="false" remarks="" size="35" type="timestamptz"/>
+         <column autoUpdated="false" digits="0" id="5" name="usuario_criacao_id" nullable="false" remarks="" size="10" type="int4"/>
+         <column autoUpdated="false" digits="6" id="6" name="data_hora_atualizacao" nullable="false" remarks="" size="35" type="timestamptz"/>
+         <column autoUpdated="false" digits="0" id="7" name="usuario_atualizacao_id" nullable="false" remarks="" size="10" type="int4"/>
+         <column autoUpdated="false" digits="0" id="8" name="nome" nullable="false" remarks="" size="255" type="varchar"/>
+         <column autoUpdated="false" digits="0" id="9" name="rendimento" nullable="false" remarks="" size="1" type="bool"/>
+         <column autoUpdated="false" digits="0" id="10" name="local_id" nullable="false" remarks="" size="10" type="int4">
+            <parent column="id" foreignKey="backend_conta_local_id_fkey" implied="false" onDeleteCascade="false" table="backend_local"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="11" name="tipo_id" nullable="false" remarks="" size="10" type="int4">
+            <parent column="id" foreignKey="backend_conta_tipo_id_fkey" implied="false" onDeleteCascade="false" table="backend_tipo"/>
+         </column>
+         <primaryKey column="id" sequenceNumberInPK="1"/>
+         <index name="backend_conta_pkey" unique="true">
+            <column ascending="true" name="id"/>
+         </index>
+         <index name="backend_conta_local_id" unique="false">
+            <column ascending="true" name="local_id"/>
+         </index>
+         <index name="backend_conta_tipo_id" unique="false">
+            <column ascending="true" name="tipo_id"/>
+         </index>
+         <index name="backend_conta_usuario_atualizacao_id" unique="false">
+            <column ascending="true" name="usuario_atualizacao_id"/>
+         </index>
+         <index name="backend_conta_usuario_criacao_id" unique="false">
+            <column ascending="true" name="usuario_criacao_id"/>
+         </index>
+      </table>
+      <table name="backend_local" numRows="5" remarks="" schema="public" type="TABLE">
+         <column autoUpdated="true" defaultValue="nextval('backend_local_id_seq'::regclass)" digits="0" id="0" name="id" nullable="false" remarks="" size="10" type="serial">
+            <child column="local_id" foreignKey="backend_conta_local_id_fkey" implied="false" onDeleteCascade="false" table="backend_conta"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="1" name="observacoes" nullable="true" remarks="" size="255" type="varchar"/>
+         <column autoUpdated="false" digits="0" id="2" name="ativo" nullable="false" remarks="" size="1" type="bool"/>
+         <column autoUpdated="false" digits="0" id="3" name="excluido" nullable="false" remarks="" size="1" type="bool"/>
+         <column autoUpdated="false" digits="6" id="4" name="data_hora_criacao" nullable="false" remarks="" size="35" type="timestamptz"/>
+         <column autoUpdated="false" digits="0" id="5" name="usuario_criacao_id" nullable="false" remarks="" size="10" type="int4"/>
+         <column autoUpdated="false" digits="6" id="6" name="data_hora_atualizacao" nullable="false" remarks="" size="35" type="timestamptz"/>
+         <column autoUpdated="false" digits="0" id="7" name="usuario_atualizacao_id" nullable="false" remarks="" size="10" type="int4"/>
+         <column autoUpdated="false" digits="0" id="8" name="nome" nullable="false" remarks="" size="255" type="varchar"/>
+         <primaryKey column="id" sequenceNumberInPK="1"/>
+         <index name="backend_local_pkey" unique="true">
+            <column ascending="true" name="id"/>
+         </index>
+         <index name="backend_local_usuario_atualizacao_id" unique="false">
+            <column ascending="true" name="usuario_atualizacao_id"/>
+         </index>
+         <index name="backend_local_usuario_criacao_id" unique="false">
+            <column ascending="true" name="usuario_criacao_id"/>
+         </index>
+      </table>
+      <table name="backend_movimento" numRows="78" remarks="" schema="public" type="TABLE">
+         <column autoUpdated="true" defaultValue="nextval('backend_movimento_id_seq'::regclass)" digits="0" id="0" name="id" nullable="false" remarks="" size="10" type="serial"/>
+         <column autoUpdated="false" digits="0" id="1" name="observacoes" nullable="true" remarks="" size="255" type="varchar"/>
+         <column autoUpdated="false" digits="0" id="2" name="ativo" nullable="false" remarks="" size="1" type="bool"/>
+         <column autoUpdated="false" digits="0" id="3" name="excluido" nullable="false" remarks="" size="1" type="bool"/>
+         <column autoUpdated="false" digits="6" id="4" name="data_hora_criacao" nullable="false" remarks="" size="35" type="timestamptz"/>
+         <column autoUpdated="false" digits="0" id="5" name="usuario_criacao_id" nullable="false" remarks="" size="10" type="int4"/>
+         <column autoUpdated="false" digits="6" id="6" name="data_hora_atualizacao" nullable="false" remarks="" size="35" type="timestamptz"/>
+         <column autoUpdated="false" digits="0" id="7" name="usuario_atualizacao_id" nullable="false" remarks="" size="10" type="int4"/>
+         <column autoUpdated="false" digits="0" id="8" name="operacao" nullable="false" remarks="" size="2" type="varchar"/>
+         <column autoUpdated="false" digits="2" id="9" name="valor" nullable="false" remarks="" size="9" type="numeric"/>
+         <column autoUpdated="false" digits="0" id="10" name="ponto_id" nullable="false" remarks="" size="10" type="int4">
+            <parent column="id" foreignKey="backend_movimento_ponto_id_fkey" implied="false" onDeleteCascade="false" table="backend_ponto"/>
+         </column>
+         <primaryKey column="id" sequenceNumberInPK="1"/>
+         <index name="backend_movimento_pkey" unique="true">
+            <column ascending="true" name="id"/>
+         </index>
+         <index name="backend_movimento_ponto_id" unique="false">
+            <column ascending="true" name="ponto_id"/>
+         </index>
+         <index name="backend_movimento_usuario_atualizacao_id" unique="false">
+            <column ascending="true" name="usuario_atualizacao_id"/>
+         </index>
+         <index name="backend_movimento_usuario_criacao_id" unique="false">
+            <column ascending="true" name="usuario_criacao_id"/>
+         </index>
+      </table>
+      <table name="backend_periodo" numRows="69" remarks="" schema="public" type="TABLE">
+         <column autoUpdated="true" defaultValue="nextval('backend_periodo_id_seq'::regclass)" digits="0" id="0" name="id" nullable="false" remarks="" size="10" type="serial">
+            <child column="periodo_id" foreignKey="backend_anali_periodo_id_66263d406069d1b6_fk_backend_periodo_id" implied="false" onDeleteCascade="false" table="backend_analise"/>
+            <child column="periodo_id" foreignKey="backend_anali_periodo_id_7467d19c601cf6f1_fk_backend_periodo_id" implied="false" onDeleteCascade="false" table="backend_analiseporperiodo"/>
+            <child column="periodoAnterior_id" foreignKey="backend_periodo_periodoAnterior_id_fkey" implied="false" onDeleteCascade="false" table="backend_periodo"/>
+            <child column="periodo_id" foreignKey="backend_ponto_periodo_id_29bce3c79e999263_fk_backend_periodo_id" implied="false" onDeleteCascade="false" table="backend_ponto"/>
+            <child column="periodo_id" foreignKey="backend_rendi_periodo_id_7eea800f1b3a4cf6_fk_backend_periodo_id" implied="false" onDeleteCascade="false" table="backend_rendimentoporperiodo"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="1" name="observacoes" nullable="true" remarks="" size="255" type="varchar"/>
+         <column autoUpdated="false" digits="0" id="2" name="ativo" nullable="false" remarks="" size="1" type="bool"/>
+         <column autoUpdated="false" digits="0" id="3" name="excluido" nullable="false" remarks="" size="1" type="bool"/>
+         <column autoUpdated="false" digits="6" id="4" name="data_hora_criacao" nullable="false" remarks="" size="35" type="timestamptz"/>
+         <column autoUpdated="false" digits="0" id="5" name="usuario_criacao_id" nullable="false" remarks="" size="10" type="int4"/>
+         <column autoUpdated="false" digits="6" id="6" name="data_hora_atualizacao" nullable="false" remarks="" size="35" type="timestamptz"/>
+         <column autoUpdated="false" digits="0" id="7" name="usuario_atualizacao_id" nullable="false" remarks="" size="10" type="int4"/>
+         <column autoUpdated="false" digits="0" id="8" name="data" nullable="false" remarks="" size="13" type="date"/>
+         <column autoUpdated="false" digits="0" id="9" name="periodoAnterior_id" nullable="true" remarks="" size="10" type="int4">
+            <parent column="id" foreignKey="backend_periodo_periodoAnterior_id_fkey" implied="false" onDeleteCascade="false" table="backend_periodo"/>
+         </column>
+         <primaryKey column="id" sequenceNumberInPK="1"/>
+         <index name="backend_periodo_pkey" unique="true">
+            <column ascending="true" name="id"/>
+         </index>
+         <index name="backend_periodo_periodoAnterior_id" unique="false">
+            <column ascending="true" name="periodoAnterior_id"/>
+         </index>
+         <index name="backend_periodo_usuario_atualizacao_id" unique="false">
+            <column ascending="true" name="usuario_atualizacao_id"/>
+         </index>
+         <index name="backend_periodo_usuario_criacao_id" unique="false">
+            <column ascending="true" name="usuario_criacao_id"/>
+         </index>
+      </table>
+      <table name="backend_ponto" numRows="504" remarks="" schema="public" type="TABLE">
+         <column autoUpdated="true" defaultValue="nextval('backend_ponto_id_seq'::regclass)" digits="0" id="0" name="id" nullable="false" remarks="" size="10" type="serial">
+            <child column="ponto_id" foreignKey="backend_movimento_ponto_id_fkey" implied="false" onDeleteCascade="false" table="backend_movimento"/>
+            <child column="pontoAnterior_id" foreignKey="backend_ponto_pontoAnterior_id_fkey" implied="false" onDeleteCascade="false" table="backend_ponto"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="1" name="observacoes" nullable="true" remarks="" size="255" type="varchar"/>
+         <column autoUpdated="false" digits="0" id="2" name="ativo" nullable="false" remarks="" size="1" type="bool"/>
+         <column autoUpdated="false" digits="0" id="3" name="excluido" nullable="false" remarks="" size="1" type="bool"/>
+         <column autoUpdated="false" digits="6" id="4" name="data_hora_criacao" nullable="false" remarks="" size="35" type="timestamptz"/>
+         <column autoUpdated="false" digits="0" id="5" name="usuario_criacao_id" nullable="false" remarks="" size="10" type="int4"/>
+         <column autoUpdated="false" digits="6" id="6" name="data_hora_atualizacao" nullable="false" remarks="" size="35" type="timestamptz"/>
+         <column autoUpdated="false" digits="0" id="7" name="usuario_atualizacao_id" nullable="false" remarks="" size="10" type="int4"/>
+         <column autoUpdated="false" digits="2" id="8" name="valor" nullable="false" remarks="" size="9" type="numeric"/>
+         <column autoUpdated="false" digits="0" id="9" name="pontoAnterior_id" nullable="true" remarks="" size="10" type="int4">
+            <parent column="id" foreignKey="backend_ponto_pontoAnterior_id_fkey" implied="false" onDeleteCascade="false" table="backend_ponto"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="10" name="conta_id" nullable="false" remarks="" size="10" type="int4">
+            <parent column="id" foreignKey="backend_ponto_conta_id_fkey" implied="false" onDeleteCascade="false" table="backend_conta"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="11" name="periodo_id" nullable="false" remarks="" size="10" type="int4">
+            <parent column="id" foreignKey="backend_ponto_periodo_id_29bce3c79e999263_fk_backend_periodo_id" implied="false" onDeleteCascade="false" table="backend_periodo"/>
+         </column>
+         <primaryKey column="id" sequenceNumberInPK="1"/>
+         <index name="backend_ponto_pkey" unique="true">
+            <column ascending="true" name="id"/>
+         </index>
+         <index name="backend_ponto_conta_id" unique="false">
+            <column ascending="true" name="conta_id"/>
+         </index>
+         <index name="backend_ponto_f67b36bb" unique="false">
+            <column ascending="true" name="periodo_id"/>
+         </index>
+         <index name="backend_ponto_pontoAnterior_id" unique="false">
+            <column ascending="true" name="pontoAnterior_id"/>
+         </index>
+         <index name="backend_ponto_usuario_atualizacao_id" unique="false">
+            <column ascending="true" name="usuario_atualizacao_id"/>
+         </index>
+         <index name="backend_ponto_usuario_criacao_id" unique="false">
+            <column ascending="true" name="usuario_criacao_id"/>
+         </index>
+      </table>
+      <table name="backend_rendimento" numRows="6" remarks="" schema="public" type="TABLE">
+         <column autoUpdated="true" defaultValue="nextval('backend_rendimento_id_seq'::regclass)" digits="0" id="0" name="id" nullable="false" remarks="" size="10" type="serial"/>
+         <column autoUpdated="false" digits="0" id="1" name="observacoes" nullable="true" remarks="" size="255" type="varchar"/>
+         <column autoUpdated="false" digits="0" id="2" name="ativo" nullable="false" remarks="" size="1" type="bool"/>
+         <column autoUpdated="false" digits="0" id="3" name="excluido" nullable="false" remarks="" size="1" type="bool"/>
+         <column autoUpdated="false" digits="6" id="4" name="data_hora_criacao" nullable="false" remarks="" size="35" type="timestamptz"/>
+         <column autoUpdated="false" digits="0" id="5" name="usuario_criacao_id" nullable="false" remarks="" size="10" type="int4"/>
+         <column autoUpdated="false" digits="6" id="6" name="data_hora_atualizacao" nullable="false" remarks="" size="35" type="timestamptz"/>
+         <column autoUpdated="false" digits="0" id="7" name="usuario_atualizacao_id" nullable="false" remarks="" size="10" type="int4"/>
+         <column autoUpdated="false" digits="0" id="8" name="conta_id" nullable="false" remarks="" size="10" type="int4">
+            <parent column="id" foreignKey="backend_rendimento_conta_id_fkey" implied="false" onDeleteCascade="false" table="backend_conta"/>
+         </column>
+         <primaryKey column="id" sequenceNumberInPK="1"/>
+         <index name="backend_rendimento_pkey" unique="true">
+            <column ascending="true" name="id"/>
+         </index>
+         <index name="backend_rendimento_conta_id" unique="false">
+            <column ascending="true" name="conta_id"/>
+         </index>
+         <index name="backend_rendimento_usuario_atualizacao_id" unique="false">
+            <column ascending="true" name="usuario_atualizacao_id"/>
+         </index>
+         <index name="backend_rendimento_usuario_criacao_id" unique="false">
+            <column ascending="true" name="usuario_criacao_id"/>
+         </index>
+      </table>
+      <table name="backend_rendimentoporperiodo" numRows="31" remarks="" schema="public" type="TABLE">
+         <column autoUpdated="true" defaultValue="nextval('backend_rendimentoporperiodo_id_seq'::regclass)" digits="0" id="0" name="id" nullable="false" remarks="" size="10" type="serial"/>
+         <column autoUpdated="false" digits="0" id="1" name="observacoes" nullable="true" remarks="" size="255" type="varchar"/>
+         <column autoUpdated="false" digits="0" id="2" name="ativo" nullable="false" remarks="" size="1" type="bool"/>
+         <column autoUpdated="false" digits="0" id="3" name="excluido" nullable="false" remarks="" size="1" type="bool"/>
+         <column autoUpdated="false" digits="6" id="4" name="data_hora_criacao" nullable="false" remarks="" size="35" type="timestamptz"/>
+         <column autoUpdated="false" digits="0" id="5" name="usuario_criacao_id" nullable="false" remarks="" size="10" type="int4"/>
+         <column autoUpdated="false" digits="6" id="6" name="data_hora_atualizacao" nullable="false" remarks="" size="35" type="timestamptz"/>
+         <column autoUpdated="false" digits="0" id="7" name="usuario_atualizacao_id" nullable="false" remarks="" size="10" type="int4"/>
+         <column autoUpdated="false" digits="0" id="8" name="periodo_id" nullable="false" remarks="" size="10" type="int4">
+            <parent column="id" foreignKey="backend_rendi_periodo_id_7eea800f1b3a4cf6_fk_backend_periodo_id" implied="false" onDeleteCascade="false" table="backend_periodo"/>
+         </column>
+         <primaryKey column="id" sequenceNumberInPK="1"/>
+         <index name="backend_rendimentoporperiodo_pkey" unique="true">
+            <column ascending="true" name="id"/>
+         </index>
+         <index name="backend_rendimentoporperiodo_f67b36bb" unique="false">
+            <column ascending="true" name="periodo_id"/>
+         </index>
+         <index name="backend_rendimentoporperiodo_usuario_atualizacao_id" unique="false">
+            <column ascending="true" name="usuario_atualizacao_id"/>
+         </index>
+         <index name="backend_rendimentoporperiodo_usuario_criacao_id" unique="false">
+            <column ascending="true" name="usuario_criacao_id"/>
+         </index>
+      </table>
+      <table name="backend_tipo" numRows="6" remarks="" schema="public" type="TABLE">
+         <column autoUpdated="true" defaultValue="nextval('backend_tipo_id_seq'::regclass)" digits="0" id="0" name="id" nullable="false" remarks="" size="10" type="serial">
+            <child column="tipo_id" foreignKey="backend_conta_tipo_id_fkey" implied="false" onDeleteCascade="false" table="backend_conta"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="1" name="observacoes" nullable="true" remarks="" size="255" type="varchar"/>
+         <column autoUpdated="false" digits="0" id="2" name="ativo" nullable="false" remarks="" size="1" type="bool"/>
+         <column autoUpdated="false" digits="0" id="3" name="excluido" nullable="false" remarks="" size="1" type="bool"/>
+         <column autoUpdated="false" digits="6" id="4" name="data_hora_criacao" nullable="false" remarks="" size="35" type="timestamptz"/>
+         <column autoUpdated="false" digits="0" id="5" name="usuario_criacao_id" nullable="false" remarks="" size="10" type="int4"/>
+         <column autoUpdated="false" digits="6" id="6" name="data_hora_atualizacao" nullable="false" remarks="" size="35" type="timestamptz"/>
+         <column autoUpdated="false" digits="0" id="7" name="usuario_atualizacao_id" nullable="false" remarks="" size="10" type="int4"/>
+         <column autoUpdated="false" digits="0" id="8" name="nome" nullable="false" remarks="" size="255" type="varchar"/>
+         <primaryKey column="id" sequenceNumberInPK="1"/>
+         <index name="backend_tipo_pkey" unique="true">
+            <column ascending="true" name="id"/>
+         </index>
+         <index name="backend_tipo_usuario_atualizacao_id" unique="false">
+            <column ascending="true" name="usuario_atualizacao_id"/>
+         </index>
+         <index name="backend_tipo_usuario_criacao_id" unique="false">
+            <column ascending="true" name="usuario_criacao_id"/>
+         </index>
+      </table>
+      <table name="django_admin_log" numRows="399" remarks="" schema="public" type="TABLE">
+         <column autoUpdated="true" defaultValue="nextval('django_admin_log_id_seq'::regclass)" digits="0" id="0" name="id" nullable="false" remarks="" size="10" type="serial"/>
+         <column autoUpdated="false" digits="6" id="1" name="action_time" nullable="false" remarks="" size="35" type="timestamptz"/>
+         <column autoUpdated="false" digits="0" id="2" name="object_id" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="3" name="object_repr" nullable="false" remarks="" size="200" type="varchar"/>
+         <column autoUpdated="false" digits="0" id="4" name="action_flag" nullable="false" remarks="" size="5" type="int2"/>
+         <column autoUpdated="false" digits="0" id="5" name="change_message" nullable="false" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="6" name="content_type_id" nullable="true" remarks="" size="10" type="int4">
+            <parent column="id" foreignKey="djan_content_type_id_4a0e0bd3c85f9581_fk_django_content_type_id" implied="false" onDeleteCascade="false" table="django_content_type"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="7" name="user_id" nullable="false" remarks="" size="10" type="int4">
+            <parent column="id" foreignKey="django_admin_log_user_id_4e98bd3103f9f6bf_fk_auth_user_id" implied="false" onDeleteCascade="false" table="auth_user"/>
+         </column>
+         <primaryKey column="id" sequenceNumberInPK="1"/>
+         <index name="django_admin_log_pkey" unique="true">
+            <column ascending="true" name="id"/>
+         </index>
+         <index name="django_admin_log_417f1b1c" unique="false">
+            <column ascending="true" name="content_type_id"/>
+         </index>
+         <index name="django_admin_log_e8701ad4" unique="false">
+            <column ascending="true" name="user_id"/>
+         </index>
+      </table>
+      <table name="django_content_type" numRows="17" remarks="" schema="public" type="TABLE">
+         <column autoUpdated="true" defaultValue="nextval('django_content_type_id_seq'::regclass)" digits="0" id="0" name="id" nullable="false" remarks="" size="10" type="serial">
+            <child column="content_type_id" foreignKey="auth_content_type_id_4d7bb97471f1a36c_fk_django_content_type_id" implied="false" onDeleteCascade="false" table="auth_permission"/>
+            <child column="content_type_id" foreignKey="djan_content_type_id_4a0e0bd3c85f9581_fk_django_content_type_id" implied="false" onDeleteCascade="false" table="django_admin_log"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="1" name="app_label" nullable="false" remarks="" size="100" type="varchar"/>
+         <column autoUpdated="false" digits="0" id="2" name="model" nullable="false" remarks="" size="100" type="varchar"/>
+         <primaryKey column="id" sequenceNumberInPK="1"/>
+         <index name="django_content_type_pkey" unique="true">
+            <column ascending="true" name="id"/>
+         </index>
+         <index name="django_content_type_app_label_2ff3835225664f9c_uniq" unique="true">
+            <column ascending="true" name="app_label"/>
+            <column ascending="true" name="model"/>
+         </index>
+      </table>
+      <table name="django_migrations" numRows="27" remarks="" schema="public" type="TABLE">
+         <column autoUpdated="true" defaultValue="nextval('django_migrations_id_seq'::regclass)" digits="0" id="0" name="id" nullable="false" remarks="" size="10" type="serial"/>
+         <column autoUpdated="false" digits="0" id="1" name="app" nullable="false" remarks="" size="255" type="varchar"/>
+         <column autoUpdated="false" digits="0" id="2" name="name" nullable="false" remarks="" size="255" type="varchar"/>
+         <column autoUpdated="false" digits="6" id="3" name="applied" nullable="false" remarks="" size="35" type="timestamptz"/>
+         <primaryKey column="id" sequenceNumberInPK="1"/>
+         <index name="django_migrations_pkey" unique="true">
+            <column ascending="true" name="id"/>
+         </index>
+      </table>
+      <table name="django_session" numRows="17" remarks="" schema="public" type="TABLE">
+         <column autoUpdated="false" digits="0" id="0" name="session_key" nullable="false" remarks="" size="40" type="varchar"/>
+         <column autoUpdated="false" digits="0" id="1" name="session_data" nullable="false" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="6" id="2" name="expire_date" nullable="false" remarks="" size="35" type="timestamptz"/>
+         <primaryKey column="session_key" sequenceNumberInPK="1"/>
+         <index name="django_session_pkey" unique="true">
+            <column ascending="true" name="session_key"/>
+         </index>
+         <index name="django_session_de54fa62" unique="false">
+            <column ascending="true" name="expire_date"/>
+         </index>
+         <index name="django_session_session_key_25e50b2ba4bebc2d_like" unique="false">
+            <column ascending="true" name="session_key"/>
+         </index>
+      </table>
+   </tables>
+</database>
