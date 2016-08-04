@@ -1,0 +1,9 @@
+[run]
+omit =
+	backend/migrations/*
+	*/__init__.py
+	pims/*
+	manage.py
+	*/builders.py
+	*/tests.py
+	*/tests.py
