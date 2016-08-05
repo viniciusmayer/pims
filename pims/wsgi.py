@@ -1,15 +1,15 @@
 """
-WSGI config for pims project.
+WSGI config for x project.
 
 It exposes the WSGI callable as a module-level variable named ``application``.
 
 For more information on this file, see
-https://docs.djangoproject.com/en/1.6/howto/deployment/wsgi/
+https://docs.djangoproject.com/en/1.10/howto/deployment/wsgi/
 """
 
-from django.core.wsgi import get_wsgi_application
 import os
 
+from django.core.wsgi import get_wsgi_application
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "pims.settings")
 

@@ -1,5 +1,6 @@
 import psycopg2
 
+
 selectConta = 'select id from backend_conta'
 
 selectPonto = 'select ponto.id, periodo."data"'\

@@ -1,14 +1,13 @@
 from django.contrib import admin
+from import_export import fields
+from import_export import resources
+from import_export.admin import ImportExportModelAdmin
 
 from backend.forms import PontoForm, TipoForm, LocalForm, ContaForm, AnaliseForm, \
     PeriodoForm, MovimentoForm, RendimentoForm, ConfiguracaoForm, \
     RendimentoPorPeriodoForm, AnalisePorPeriodoForm
 from backend.models import Ponto, Tipo, Local, Conta, Analise, Periodo, \
     Movimento, Rendimento, Configuracao, RendimentoPorPeriodo, AnalisePorPeriodo
-
-from import_export import resources
-from import_export import fields
-from import_export.admin import ImportExportModelAdmin
 
 
 class PontoAdmin(admin.ModelAdmin):

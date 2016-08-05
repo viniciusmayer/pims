@@ -1,7 +1,9 @@
 import csv
-import psycopg2
 from datetime import date, datetime
+import psycopg2
+
 from scripts.analisePeriodoUpdater import selectPeriodo
+
 
 class Conta(object):
     def __init__(self, conta, tipo, local):

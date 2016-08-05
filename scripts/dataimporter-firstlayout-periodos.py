@@ -1,6 +1,7 @@
 import csv
-import psycopg2
 from datetime import date, datetime
+import psycopg2
+
 
 selectPeriodo = 'select * from backend_periodo where "data" = ''\'{0}''\''
 
