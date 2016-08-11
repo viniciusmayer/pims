@@ -107,7 +107,7 @@ class AnaliseResource(resources.ModelResource):
         return analise.periodo.data
     
     def dehydrate_total(self, analise):
-        return analise.total()
+        return analise.total
     
     def dehydrate_diferenca(self, analise):
         return analise.diferenca()
@@ -118,7 +118,7 @@ class AnaliseResource(resources.ModelResource):
 class AnaliseAdmin(ImportExportModelAdmin):
     resource_class = AnaliseResource
     form = AnaliseForm
-    list_display = ['periodo', 'total', 'diferenca', 'diferencaPercentual', 'analiseAnterior', 'observacoes']
+    list_display = ['periodo', 'total', 'getTotal', 'diferenca', 'diferencaPercentual', 'observacoes']
     search_fields = ['observacoes']
     exclude = ['excluido']
     

@@ -129,31 +129,34 @@ class Movimento(CommonInfo):
     
 class Analise(CommonInfo):
     periodo = models.ForeignKey(Periodo, limit_choices_to={'ativo':True, 'excluido':False})
-    analiseAnterior = models.ForeignKey('self', null=True, blank=True, on_delete=models.SET_NULL, limit_choices_to={'ativo':True, 'excluido':False})
+    total = models.DecimalField(max_digits=9, decimal_places=2, null=True)
 
     class Meta:
         ordering = ['-ativo', '-periodo__data', '-data_hora_atualizacao', '-data_hora_criacao']
         
     #TODO testar
-    def total(self):
-        total = None
+    def getTotal(self):
+        _total = None
         pontos = Ponto.objects.filter(periodo__data=self.periodo.data)
         for ponto in pontos:
-            if (total is None):
-                total = 0
-            total += ponto.valor
-        return total
+            if (_total is None):
+                _total = 0
+            _total += ponto.valor
+        return _total
+    getTotal.short_description = '_total'
     
     #TODO testar
     def diferenca(self):
-        if (not self.analiseAnterior is None):
-            return self.total() - self.analiseAnterior.total()
+        _analiseAnterior = Analise.objects.get(periodo = self.periodo.periodoAnterior)
+        if (not _analiseAnterior is None):
+            return self.total - _analiseAnterior.total
         return None
     
     #TODO testar
     def diferencaPercentual(self):
-        if (not self.analiseAnterior is None):
-            return round(((self.diferenca() / self.analiseAnterior.total()) * 100), 2)
+        _analiseAnterior = Analise.objects.get(periodo = self.periodo.periodoAnterior)
+        if (not _analiseAnterior is None):
+            return round(((self.diferenca() / _analiseAnterior.total) * 100), 2)
         return None
     diferencaPercentual.short_description = 'diferenca percentual'
     
