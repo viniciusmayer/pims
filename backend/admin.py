@@ -2,6 +2,7 @@ from django.contrib import admin
 from import_export import fields
 from import_export import resources
 from import_export.admin import ImportExportModelAdmin
+import pika
 
 from backend.forms import PontoForm, TipoForm, LocalForm, ContaForm, AnaliseForm, \
     PeriodoForm, MovimentoForm, RendimentoForm, ConfiguracaoForm, \
@@ -26,6 +27,10 @@ class PontoAdmin(admin.ModelAdmin):
         if (not pa is None):
             obj.pontoAnterior = pa
         obj.save()
+        connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
+        channel = connection.channel()
+        channel.queue_declare(queue='pims')
+        channel.basic_publish(exchange='', routing_key='pims', body='')
         
     def get_queryset(self, request):
         qs = super(PontoAdmin, self).get_queryset(request)
@@ -118,7 +123,7 @@ class AnaliseResource(resources.ModelResource):
 class AnaliseAdmin(ImportExportModelAdmin):
     resource_class = AnaliseResource
     form = AnaliseForm
-    list_display = ['periodo', 'total', 'getTotal', 'diferenca', 'diferencaPercentual', 'observacoes']
+    list_display = ['periodo', 'total', 'diferenca', 'diferencaPercentual', 'observacoes']
     search_fields = ['observacoes']
     exclude = ['excluido']
     

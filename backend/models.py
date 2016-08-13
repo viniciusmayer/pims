@@ -135,17 +135,6 @@ class Analise(CommonInfo):
         ordering = ['-ativo', '-periodo__data', '-data_hora_atualizacao', '-data_hora_criacao']
         
     #TODO testar
-    def getTotal(self):
-        _total = None
-        pontos = Ponto.objects.filter(periodo__data=self.periodo.data)
-        for ponto in pontos:
-            if (_total is None):
-                _total = 0
-            _total += ponto.valor
-        return _total
-    getTotal.short_description = '_total'
-    
-    #TODO testar
     def diferenca(self):
         _analiseAnterior = Analise.objects.get(periodo = self.periodo.periodoAnterior)
         if (not _analiseAnterior is None):
