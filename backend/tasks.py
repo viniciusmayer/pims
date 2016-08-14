@@ -1,9 +1,12 @@
 import pika
+from backend.models import Configuracao
 
 class Queue(object):
 
     def notify(self):
-        connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
+        host = Configuracao.objects.get(chave='QUEUE_HOST')
+        connection = pika.BlockingConnection(pika.ConnectionParameters(host.valor))
         channel = connection.channel()
-        channel.queue_declare(queue='pims')
+        _queue = Configuracao.objects.get(chave='QUEUE_NAME')
+        channel.queue_declare(queue=_queue.valor)
         channel.basic_publish(exchange='', routing_key='pims', body='')

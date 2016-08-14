@@ -121,7 +121,7 @@ class AnaliseResource(resources.ModelResource):
 class AnaliseAdmin(ImportExportModelAdmin):
     resource_class = AnaliseResource
     form = AnaliseForm
-    list_display = ['periodo', 'total', 'diferenca', 'diferencaPercentual', 'observacoes']
+    list_display = ['periodo', 'total', 'diferenca', 'diferencaPercentual', 'data_hora_atualizacao', 'observacoes']
     search_fields = ['observacoes']
     exclude = ['excluido']
     
