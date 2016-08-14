@@ -2,13 +2,13 @@ from django.contrib import admin
 from import_export import fields
 from import_export import resources
 from import_export.admin import ImportExportModelAdmin
-import pika
 
 from backend.forms import PontoForm, TipoForm, LocalForm, ContaForm, AnaliseForm, \
     PeriodoForm, MovimentoForm, RendimentoForm, ConfiguracaoForm, \
     RendimentoPorPeriodoForm, AnalisePorPeriodoForm
 from backend.models import Ponto, Tipo, Local, Conta, Analise, Periodo, \
     Movimento, Rendimento, Configuracao, RendimentoPorPeriodo, AnalisePorPeriodo
+from backend.tasks import Queue
 
 
 class PontoAdmin(admin.ModelAdmin):
@@ -27,10 +27,8 @@ class PontoAdmin(admin.ModelAdmin):
         if (not pa is None):
             obj.pontoAnterior = pa
         obj.save()
-        connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
-        channel = connection.channel()
-        channel.queue_declare(queue='pims')
-        channel.basic_publish(exchange='', routing_key='pims', body='')
+        queue = Queue()
+        queue.notify()
         
     def get_queryset(self, request):
         qs = super(PontoAdmin, self).get_queryset(request)
