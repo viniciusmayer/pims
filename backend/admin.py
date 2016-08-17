@@ -22,10 +22,11 @@ class PontoAdmin(admin.ModelAdmin):
         # FIXME setar o usuario_criacao apenas se for nulo
         obj.usuario_criacao = request.user
         obj.usuario_atualizacao = request.user
+        obj.pontoAnterior = None
         p = Periodo.objects.filter(data__lt=obj.periodo.data).latest('data')
-        pa = Ponto.objects.get(conta=obj.conta, periodo=p)
-        if (not pa is None):
-            obj.pontoAnterior = pa
+        pa = Ponto.objects.filter(conta=obj.conta, periodo=p)
+        if (not p is None and pa.count() > 0):
+            obj.pontoAnterior = pa.first()
         obj.save()
         queue = Queue()
         queue.notify()

@@ -234,7 +234,7 @@ class Rendimento(CommonInfo):
     #TODO testar
     def medio(self):
         total = self.total()
-        if (not total is None):
+        if (not total is None and self.vezes() > 0):
             total /= self.vezes()
             return round(total, 2)
         return None
@@ -250,7 +250,8 @@ class Rendimento(CommonInfo):
             dif = ponto.diferencaPercentual()
             if (not dif is None):
                 total += Decimal(dif)
-        total /= self.vezes()
+        if (not total is None and self.vezes() > 0):
+            total /= self.vezes()
         return round(total, 2)
     mediaPercentual.short_description = 'media percentual'
 
