@@ -29,8 +29,8 @@ class Conta(CommonInfo):
     nome = models.CharField(max_length=255)
     rendimento = models.BooleanField(default=False)
     
-    local = models.ForeignKey(Local, limit_choices_to={'ativo':True, 'excluido':False})
-    tipo = models.ForeignKey(Tipo, limit_choices_to={'ativo':True, 'excluido':False})
+    local = models.ForeignKey(Local)
+    tipo = models.ForeignKey(Tipo)
     
     class Meta:
         ordering = ['-ativo', 'nome', '-data_hora_atualizacao', '-data_hora_criacao']
@@ -40,7 +40,7 @@ class Conta(CommonInfo):
     
 class Periodo(CommonInfo):
     data = models.DateField(default=timezone.now)
-    periodoAnterior = models.ForeignKey('self', null=True, blank=True, on_delete=models.SET_NULL, limit_choices_to={'ativo':True, 'excluido':False})
+    periodoAnterior = models.ForeignKey('self', null=True, blank=True, on_delete=models.SET_NULL)
     
     class Meta:
         ordering = ['-ativo', '-data', '-data_hora_atualizacao', '-data_hora_criacao']
@@ -51,9 +51,9 @@ class Periodo(CommonInfo):
 class Ponto(CommonInfo):
     valor = models.DecimalField(max_digits=9, decimal_places=2)
 
-    periodo = models.ForeignKey(Periodo, limit_choices_to={'ativo':True, 'excluido':False})
-    pontoAnterior = models.ForeignKey('self', null=True, blank=True, on_delete=models.SET_NULL, limit_choices_to={'ativo':True, 'excluido':False})
-    conta = models.ForeignKey(Conta, limit_choices_to={'ativo':True, 'excluido':False})
+    periodo = models.ForeignKey(Periodo)
+    pontoAnterior = models.ForeignKey('self', null=True, blank=True, on_delete=models.SET_NULL)
+    conta = models.ForeignKey(Conta)
     
     class Meta:
         ordering = ['-ativo', '-periodo__data', '-data_hora_atualizacao', '-data_hora_criacao']
@@ -102,7 +102,7 @@ class Movimento(CommonInfo):
     operacao = models.CharField(max_length=2, choices=OPERACAO)
     valor = models.DecimalField(max_digits=9, decimal_places=2)
     
-    ponto = models.ForeignKey(Ponto, limit_choices_to={'ativo':True, 'excluido':False})
+    ponto = models.ForeignKey(Ponto)
     
     class Meta:
         ordering = ['-ativo', '-ponto__periodo__data', '-data_hora_atualizacao', '-data_hora_criacao']
@@ -128,7 +128,7 @@ class Movimento(CommonInfo):
     nome_tipo.short_description = 'Tipo'
     
 class Analise(CommonInfo):
-    periodo = models.ForeignKey(Periodo, limit_choices_to={'ativo':True, 'excluido':False})
+    periodo = models.ForeignKey(Periodo)
     total = models.DecimalField(max_digits=9, decimal_places=2, null=True)
 
     class Meta:
@@ -153,7 +153,7 @@ class Analise(CommonInfo):
         return str(self.periodo.data)
     
 class AnalisePorPeriodo(CommonInfo):
-    periodo = models.ForeignKey(Periodo, limit_choices_to={'ativo':True, 'excluido':False})
+    periodo = models.ForeignKey(Periodo)
 
     class Meta:
         ordering = ['-ativo', '-periodo__data', '-data_hora_atualizacao', '-data_hora_criacao']
@@ -192,7 +192,7 @@ class AnalisePorPeriodo(CommonInfo):
         return str(self.periodo.data)
 
 class Rendimento(CommonInfo):
-    conta = models.ForeignKey(Conta, limit_choices_to={'ativo':True, 'excluido':False}, related_name='rendimento_conta')
+    conta = models.ForeignKey(Conta, related_name='rendimento_conta')
         
     class Meta:
         ordering = ['-ativo', '-data_hora_atualizacao', '-data_hora_criacao']
@@ -256,7 +256,7 @@ class Rendimento(CommonInfo):
     mediaPercentual.short_description = 'media percentual'
 
 class RendimentoPorPeriodo(CommonInfo):
-    periodo = models.ForeignKey(Periodo, limit_choices_to={'ativo':True, 'excluido':False})
+    periodo = models.ForeignKey(Periodo)
             
     class Meta:
         ordering = ['-ativo', '-periodo__data', '-data_hora_atualizacao', '-data_hora_criacao']
