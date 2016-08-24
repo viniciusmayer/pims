@@ -124,10 +124,10 @@ class AnaliseResource(resources.ModelResource):
 class AnaliseAdmin(ImportExportModelAdmin):
     resource_class = AnaliseResource
     form = AnaliseForm
-    list_display = ['periodo', 'total', 'diferenca', 'diferencaPercentual', 'data_hora_atualizacao', 'observacoes', 'ativo']
-    list_filter = ['ativo']
-    search_fields = ['observacoes']
-    exclude = ['excluido']
+    list_display = ['periodo', 'total', 'diferenca', 'diferencaPercentual', 'ativo']
+    list_filter = ['ativo']'
+    #search_fields = ['observacoes']
+    #exclude = ['excluido']
     
     def save_model(self, request, obj, form, change):
         # FIXME setar o usuario_criacao apenas se for nulo

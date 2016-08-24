@@ -136,14 +136,14 @@ class Analise(CommonInfo):
         
     #TODO testar
     def diferenca(self):
-        _analiseAnterior = Analise.objects.get(periodo = self.periodo.periodoAnterior)
+        _analiseAnterior = Analise.objects.filter(periodo = self.periodo.periodoAnterior).first()
         if (not _analiseAnterior is None):
             return self.total - _analiseAnterior.total
         return None
     
     #TODO testar
     def diferencaPercentual(self):
-        _analiseAnterior = Analise.objects.get(periodo = self.periodo.periodoAnterior)
+        _analiseAnterior = Analise.objects.filter(periodo = self.periodo.periodoAnterior).first()
         if (not _analiseAnterior is None):
             return round(((self.diferenca() / _analiseAnterior.total) * 100), 2)
         return None
