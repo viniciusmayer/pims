@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django.db.models.query_utils import Q
 from import_export import fields
 from import_export import resources
 from import_export.admin import ImportExportModelAdmin
@@ -35,9 +36,18 @@ class PontoAdmin(admin.ModelAdmin):
         qs = super(PontoAdmin, self).get_queryset(request)
         return qs.filter(excluido=False)
     
+    def get_form(self, request, obj=None, **kwargs):
+        self.instance = obj
+        return super(PontoAdmin, self).get_form(request, obj=obj, **kwargs)
+    
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
         if db_field.name == "conta":
-            kwargs["queryset"] = Conta.objects.order_by('local__nome', 'tipo__nome', 'nome')
+            q = Q(ativo=True)
+            if (self.instance is None):
+                kwargs["queryset"] = Conta.objects.filter(q).order_by('local__nome', 'tipo__nome', 'nome')
+            else:
+                q = q | Q(id=self.instance.conta.id)
+                kwargs["queryset"] = Conta.objects.filter(q).order_by('local__nome', 'tipo__nome', 'nome')
         return super(PontoAdmin, self).formfield_for_foreignkey(db_field, request, **kwargs)
 
 admin.site.register(Ponto, PontoAdmin)
@@ -125,7 +135,7 @@ class AnaliseAdmin(ImportExportModelAdmin):
     resource_class = AnaliseResource
     form = AnaliseForm
     list_display = ['periodo', 'total', 'diferenca', 'diferencaPercentual', 'ativo']
-    list_filter = ['ativo']'
+    list_filter = ['ativo']
     #search_fields = ['observacoes']
     #exclude = ['excluido']
     
