@@ -4,6 +4,7 @@ from import_export import fields
 from import_export import resources
 from import_export.admin import ImportExportModelAdmin
 
+from backend.filters import StatusFilter
 from backend.forms import PontoForm, TipoForm, LocalForm, ContaForm, AnaliseForm, \
     PeriodoForm, MovimentoForm, RendimentoForm, ConfiguracaoForm, \
     RendimentoPorPeriodoForm, AnalisePorPeriodoForm
@@ -15,7 +16,7 @@ from backend.tasks import Queue
 class PontoAdmin(admin.ModelAdmin):
     form = PontoForm
     list_display = ['valor', 'periodo', 'nome_local', 'nome_tipo', 'nome_conta', 'diferenca', 'diferencaPercentual', 'pontoAnterior', 'observacoes', 'ativo']
-    list_filter = ['conta__rendimento', 'conta__local', 'conta__tipo', 'conta__nome', 'ativo']
+    list_filter = [StatusFilter, 'conta__rendimento', 'conta__local', 'conta__tipo', 'conta__nome']
     search_fields = ['periodo__data', 'valor', 'observacoes']
     exclude = ['excluido', 'pontoAnterior']
     
@@ -55,7 +56,7 @@ admin.site.register(Ponto, PontoAdmin)
 class TipoAdmin(admin.ModelAdmin):
     form = TipoForm
     list_display = ['nome', 'observacoes', 'ativo']
-    list_filter = ['ativo']
+    list_filter = [StatusFilter]
     search_fields = ['nome', 'observacoes']
     exclude = ['excluido']
     
@@ -74,7 +75,7 @@ admin.site.register(Tipo, TipoAdmin)
 class LocalAdmin(admin.ModelAdmin):
     form = LocalForm
     list_display = ['nome', 'observacoes', 'ativo']
-    list_filter = ['ativo']
+    list_filter = [StatusFilter]
     search_fields = ['nome', 'observacoes']
     exclude = ['excluido']
     
@@ -93,7 +94,7 @@ admin.site.register(Local, LocalAdmin)
 class ContaAdmin(admin.ModelAdmin):
     form = ContaForm
     list_display = ['nome', 'tipo', 'local', 'rendimento', 'observacoes', 'ativo']
-    list_filter = ['local', 'tipo', 'rendimento', 'ativo']
+    list_filter = [StatusFilter, 'local', 'tipo', 'rendimento']
     search_fields = ['nome', 'observacoes']
     exclude = ['excluido']
     
@@ -135,7 +136,7 @@ class AnaliseAdmin(ImportExportModelAdmin):
     resource_class = AnaliseResource
     form = AnaliseForm
     list_display = ['periodo', 'total', 'diferenca', 'diferencaPercentual', 'ativo']
-    list_filter = ['ativo']
+    list_filter = [StatusFilter]
     #search_fields = ['observacoes']
     #exclude = ['excluido']
     
@@ -154,7 +155,7 @@ admin.site.register(Analise, AnaliseAdmin)
 class AnalisePorPeriodoAdmin(admin.ModelAdmin):
     form = AnalisePorPeriodoForm
     list_display = ['periodo', 'diferenca', 'rendimento', 'resultado', 'resultadoPercentual', 'observacoes', 'ativo']
-    list_filter = ['ativo']
+    list_filter = [StatusFilter]
     search_fields = ['observacoes']
     exclude = ['excluido']
     
@@ -173,7 +174,7 @@ admin.site.register(AnalisePorPeriodo, AnalisePorPeriodoAdmin)
 class PeriodoAdmin(admin.ModelAdmin):
     form = PeriodoForm
     list_display = ['data', 'periodoAnterior', 'observacoes', 'ativo']
-    list_filter = ['ativo']
+    list_filter = [StatusFilter]
     search_fields = ['observacoes']
     date_hierarchy = 'data'
     exclude = ['excluido']
@@ -193,7 +194,7 @@ admin.site.register(Periodo, PeriodoAdmin)
 class MovimentoAdmin(admin.ModelAdmin):
     form = MovimentoForm
     list_display = ['operacao', 'valor', 'periodo', 'nome_local', 'nome_tipo', 'nome_conta', 'observacoes', 'ativo']
-    list_filter = ['operacao', 'ponto__conta__local', 'ponto__conta__tipo', 'ponto__conta__nome', 'ativo']
+    list_filter = [StatusFilter, 'operacao', 'ponto__conta__local', 'ponto__conta__tipo', 'ponto__conta__nome']
     search_fields = ['observacoes']
     exclude = ['excluido']
     
@@ -212,7 +213,7 @@ admin.site.register(Movimento, MovimentoAdmin)
 class RendimentoAdmin(admin.ModelAdmin):
     form = RendimentoForm
     list_display = ['nome_local', 'nome_tipo', 'nome_conta', 'total', 'vezes', 'medio', 'mediaPercentual', 'observacoes', 'ativo']
-    list_filter = ['conta__local', 'conta__tipo', 'ativo']
+    list_filter = [StatusFilter, 'conta__local', 'conta__tipo']
     search_fields = ['observacoes']
     exclude = ['excluido']
     
@@ -231,7 +232,7 @@ admin.site.register(Rendimento, RendimentoAdmin)
 class RendimentoPorPeriodoAdmin(admin.ModelAdmin):
     form = RendimentoPorPeriodoForm
     list_display = ['periodo', 'total', 'vezes', 'medio', 'observacoes', 'ativo']
-    list_filter = ['ativo']
+    list_filter = [StatusFilter]
     search_fields = ['observacoes']
     exclude = ['excluido']
     
@@ -250,7 +251,7 @@ admin.site.register(RendimentoPorPeriodo, RendimentoPorPeriodoAdmin)
 class ConfiguracaoAdmin(admin.ModelAdmin):
     form = ConfiguracaoForm
     list_display = ['chave', 'valor', 'observacoes', 'ativo']
-    list_filter = ['ativo']
+    list_filter = [StatusFilter]
     search_fields = ['chave', 'valor', 'observacoes']
     exclude = ['excluido']
     
