@@ -1,8 +1,5 @@
 from django.contrib import admin
 from django.db.models.query_utils import Q
-from import_export import fields
-from import_export import resources
-from import_export.admin import ImportExportModelAdmin
 
 from backend.filters import StatusFilter
 from backend.forms import PontoForm, TipoForm, LocalForm, ContaForm, AnaliseForm, \
@@ -107,38 +104,33 @@ class ContaAdmin(admin.ModelAdmin):
     def get_queryset(self, request):
         qs = super(ContaAdmin, self).get_queryset(request)
         return qs.filter(excluido=False)
+
+    def get_form(self, request, obj=None, **kwargs):
+        self.instance = obj
+        return super(ContaAdmin, self).get_form(request, obj=obj, **kwargs)
+
+    def formfield_for_foreignkey(self, db_field, request, **kwargs):
+        q = Q(ativo=True)
+        if db_field.name == 'local':
+            kwargs["queryset"] = Local.objects.filter(q).order_by('nome')
+            if (not self.instance is None):
+                _q = q | Q(id=self.instance.local.id)
+                kwargs["queryset"] = Local.objects.filter(_q).order_by('nome')
+        if db_field.name == 'tipo':
+            kwargs["queryset"] = Tipo.objects.filter(q).order_by('nome')
+            if (not self.instance is None):
+                _q = q | Q(id=self.instance.tipo.id)
+                kwargs["queryset"] = Tipo.objects.filter(_q).order_by('nome')
+        return super(ContaAdmin, self).formfield_for_foreignkey(db_field, request, **kwargs)
     
 admin.site.register(Conta, ContaAdmin)
 
-class AnaliseResource(resources.ModelResource):
-    periodo = fields.Field()
-    total = fields.Field()
-    diferenca = fields.Field()
-    diferencaPercentual = fields.Field() 
-    
-    class Meta:
-        model = Analise
-        export_order = ('periodo', 'total', 'diferenca', 'diferencaPercentual')
-        
-    def dehydrate_periodo(self, analise):
-        return analise.periodo.data
-    
-    def dehydrate_total(self, analise):
-        return analise.total
-    
-    def dehydrate_diferenca(self, analise):
-        return analise.diferenca()
-    
-    def dehydrate_diferencaPercentual(self, analise):
-        return analise.diferencaPercentual()
-
-class AnaliseAdmin(ImportExportModelAdmin):
-    resource_class = AnaliseResource
+class AnaliseAdmin(admin.ModelAdmin):
     form = AnaliseForm
     list_display = ['periodo', 'total', 'diferenca', 'diferencaPercentual', 'ativo']
     list_filter = [StatusFilter]
-    #search_fields = ['observacoes']
-    #exclude = ['excluido']
+    search_fields = ['observacoes']
+    exclude = ['excluido']
     
     def save_model(self, request, obj, form, change):
         # FIXME setar o usuario_criacao apenas se for nulo
