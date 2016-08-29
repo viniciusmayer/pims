@@ -257,13 +257,14 @@ class Rendimento(CommonInfo):
 
 class RendimentoPorPeriodo(CommonInfo):
     periodo = models.ForeignKey(Periodo)
+    total = models.DecimalField(max_digits=9, decimal_places=2, null=True)
             
     class Meta:
         ordering = ['-ativo', '-periodo__data', '-data_hora_atualizacao', '-data_hora_criacao']
         verbose_name_plural = 'rendimentos por periodo'
 
     #TODO testar
-    def total(self):
+    def getTotal(self):
         total = None
         pontos = Ponto.objects.filter(periodo__data=self.periodo.data, conta__rendimento=True)
         for ponto in pontos:
@@ -290,7 +291,7 @@ class RendimentoPorPeriodo(CommonInfo):
     
     #TODO testar
     def medio(self):
-        total = self.total()
+        total = self.getTotal()
         if (not total is None):
             total /= self.vezes()
             return round(total, 2)

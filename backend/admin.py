@@ -223,7 +223,7 @@ admin.site.register(Rendimento, RendimentoAdmin)
 
 class RendimentoPorPeriodoAdmin(admin.ModelAdmin):
     form = RendimentoPorPeriodoForm
-    list_display = ['periodo', 'total', 'vezes', 'medio', 'observacoes', 'ativo']
+    list_display = ['periodo', 'total', 'getTotal', 'vezes', 'medio', 'observacoes', 'ativo']
     list_filter = [StatusFilter]
     search_fields = ['observacoes']
     exclude = ['excluido']
