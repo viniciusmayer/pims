@@ -2,8 +2,10 @@
 from decimal import Decimal
 from django.db import models
 from django.utils import timezone
+from enum import Enum
 
 from common.models import CommonInfo
+from psycopg2.tests.testconfig import dbuser
 
 
 class Tipo(CommonInfo):
@@ -298,6 +300,13 @@ class RendimentoPorPeriodo(CommonInfo):
         return None
     medio.short_description = 'media'
     
+class ConfiguracaoEnum(Enum):
+    dbURL = 'jdbc:postgresql://localhost:5432/pims'
+    dbUser = 'pims'
+    dbPassword = 'viniciusmayer'
+    queueHost = 'localhost'
+    queueName = 'pims'
+
 class Configuracao(CommonInfo):
     chave = models.CharField(max_length=255)
     valor = models.CharField(max_length=255)
