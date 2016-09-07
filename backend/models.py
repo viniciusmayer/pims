@@ -5,7 +5,6 @@ from django.utils import timezone
 from enum import Enum
 
 from common.models import CommonInfo
-from psycopg2.tests.testconfig import dbuser
 
 
 class Tipo(CommonInfo):
@@ -169,7 +168,7 @@ class AnalisePorPeriodo(CommonInfo):
     #TODO testar
     def rendimento(self):
         rendimento = RendimentoPorPeriodo.objects.get(periodo__data = self.periodo.data)
-        return rendimento.total()
+        return rendimento.total
     
     #TODO testar
     def resultado(self):
@@ -266,20 +265,6 @@ class RendimentoPorPeriodo(CommonInfo):
         verbose_name_plural = 'rendimentos por periodo'
 
     #TODO testar
-    def getTotal(self):
-        total = None
-        pontos = Ponto.objects.filter(periodo__data=self.periodo.data, conta__rendimento=True)
-        for ponto in pontos:
-            diferenca = ponto.diferenca()
-            if (not diferenca is None):
-                if (total is None):
-                    total = Decimal(0)
-                total += diferenca
-        if (not total is None):
-            total = round(total, 2)
-        return total
-    
-    #TODO testar
     def vezes(self):
         pontos = Ponto.objects.filter(periodo__data=self.periodo.data, conta__rendimento=True)
         count = None
@@ -293,8 +278,9 @@ class RendimentoPorPeriodo(CommonInfo):
     
     #TODO testar
     def medio(self):
-        total = self.getTotal()
-        if (not total is None):
+        total = self.total
+        vezes = self.vezes()
+        if (not total is None and not vezes is None):
             total /= self.vezes()
             return round(total, 2)
         return None

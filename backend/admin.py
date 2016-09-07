@@ -13,7 +13,7 @@ from backend.tasks import Queue
 class PontoAdmin(admin.ModelAdmin):
     form = PontoForm
     list_display = ['valor', 'periodo', 'nome_local', 'nome_tipo', 'nome_conta', 'diferenca', 'diferencaPercentual', 'pontoAnterior', 'observacoes', 'ativo']
-    list_filter = [StatusFilter, 'conta__rendimento', 'conta__local', 'conta__tipo', 'conta__nome']
+    list_filter = [StatusFilter, 'conta__rendimento', 'conta__local', 'conta__tipo', 'conta__nome', 'periodo']
     search_fields = ['periodo__data', 'valor', 'observacoes']
     exclude = ['excluido', 'pontoAnterior']
     
@@ -195,6 +195,8 @@ class MovimentoAdmin(admin.ModelAdmin):
         obj.usuario_criacao = request.user
         obj.usuario_atualizacao = request.user
         obj.save()
+        queue = Queue()
+        queue.notify()
 
     def get_queryset(self, request):
         qs = super(MovimentoAdmin, self).get_queryset(request)
@@ -223,7 +225,7 @@ admin.site.register(Rendimento, RendimentoAdmin)
 
 class RendimentoPorPeriodoAdmin(admin.ModelAdmin):
     form = RendimentoPorPeriodoForm
-    list_display = ['periodo', 'total', 'getTotal', 'vezes', 'medio', 'observacoes', 'ativo']
+    list_display = ['periodo', 'total', 'vezes', 'medio', 'observacoes', 'ativo']
     list_filter = [StatusFilter]
     search_fields = ['observacoes']
     exclude = ['excluido']
