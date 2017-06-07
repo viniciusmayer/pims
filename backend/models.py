@@ -51,6 +51,7 @@ class Periodo(CommonInfo):
     
 class Ponto(CommonInfo):
     valor = models.DecimalField(max_digits=9, decimal_places=2)
+    quando = models.DateField()
 
     periodo = models.ForeignKey(Periodo)
     pontoAnterior = models.ForeignKey('self', null=True, blank=True, on_delete=models.SET_NULL)
