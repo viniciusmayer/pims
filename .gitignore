@@ -6,3 +6,8 @@
 .coverage
 coverage/
 schemaspy/
+Include/
+lib/
+pip-selfcheck.json
+scripts/
+tcl/
