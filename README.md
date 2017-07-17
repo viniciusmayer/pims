@@ -1,30 +1,8 @@
-pip install django
-pip install djangorestframework
-pip install psycopg2
-pip install pika
-pip install django-jenkins
-pip install coverage
-
-python manage.py migrate
-python manage.py createsuperuser
-python manage.py runserver
-
-/**
-Djanto-AMQP
-http://pika.readthedocs.io/en/stable/
-
-Django-PostgreSQL
-http://initd.org/psycopg/docs/install.html
-
-Django-Jenkings
-https://github.com/kmmbvnr/django-jenkins
-
-Django-RestFramework
-http://www.django-rest-framework.org/tutorial/quickstart/
-*/
-
 # Project setup
 '''
+	wget https://bootstrap.pypa.io/get-pip.py
+	python get-pip.py
+	sudo pip install -U pip
 	git clone <url>
 	virtualenv pims
 	cd pims
@@ -32,6 +10,12 @@ http://www.django-rest-framework.org/tutorial/quickstart/
 	pip install django
 	pip install psycopg2
 	pip install pika
+	pip install coverage
+
+	python manage.py migrate
+	python manage.py createsuperuser
+	python manage.py runserver
+
 '''
 
 # Run
@@ -63,3 +47,13 @@ CREATE DATABASE pims
     ENCODING = 'UTF8'
     CONNECTION LIMIT = -1;
 '''
+
+# PGAdmin 4 - On *Unix
+'''
+	sudo apt-get install python-dev
+	sudo pip install https://ftp.postgresql.org/pub/pgadmin/pgadmin4/v1.5/pip/pgadmin4-1.5-py2.py3-none-any.whl
+'''
+
+# References
+* Djanto-AMQP: http://pika.readthedocs.io/en/stable/
+* Django-PostgreSQL: http://initd.org/psycopg/docs/install.html
