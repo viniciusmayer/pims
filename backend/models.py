@@ -73,10 +73,12 @@ class Ponto(CommonInfo):
     nome_tipo.short_description = 'Tipo'
 
     #TODO testar 1º
+    #FIXME working here
     def diferenca(self):
         _diferenca = None
-        if (not self.pontoAnterior is None):
-            _diferenca = self.valor - self.pontoAnterior.valor
+        _pontoAnterior = Ponto.objects.filter(periodo__data__lt=self.quando).order_by('-periodo__data').first()
+        if (not _pontoAnterior is None):
+            _diferenca = self.valor - _pontoAnterior.valor
             movimentos = Movimento.objects.filter(ponto=self)
             for movimento in movimentos:
                 # FIXME transformar numa Enum

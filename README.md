@@ -55,5 +55,6 @@ CREATE DATABASE pims
 '''
 
 # References
-* Djanto-AMQP: http://pika.readthedocs.io/en/stable/
-* Django-PostgreSQL: http://initd.org/psycopg/docs/install.html
+* Djanto-AMQP: http://pika.readthedocs.io
+* Django-PostgreSQL: http://initd.org/psycopg/docs
+* Kafka Python: http://kafka-python.readthedocs.io
