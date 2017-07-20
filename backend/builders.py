@@ -20,11 +20,10 @@ class UUIDGenerator():
 
 class PontoBuilder():
     @staticmethod
-    def create(valor, periodo, conta, pontoAnterior=None):
+    def create(valor, quando, conta):
         return Ponto.objects.create(
             valor=valor,
-            periodo=periodo,
-            pontoAnterior=pontoAnterior,
+            quando=quando,
             conta=conta,
             usuario_criacao=UsuarioBuilder.sessionUser(),
             usuario_atualizacao=UsuarioBuilder.sessionUser(),)

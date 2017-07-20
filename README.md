@@ -18,6 +18,11 @@
 
 '''
 
+# Shell
+'''
+	python manage.py shell
+'''
+
 # Run
 '''
 	cd pims

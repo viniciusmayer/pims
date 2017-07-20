@@ -12,23 +12,18 @@ from backend.tasks import Queue
 
 class PontoAdmin(admin.ModelAdmin):
     form = PontoForm
-    list_display = ['valor', 'periodo', 'nome_local', 'nome_tipo', 'nome_conta', 'diferenca', 'diferencaPercentual', 'pontoAnterior', 'observacoes', 'ativo']
-    list_filter = [StatusFilter, 'conta__rendimento', 'conta__local', 'conta__tipo', 'conta__nome', 'periodo']
-    search_fields = ['periodo__data', 'valor', 'observacoes']
-    exclude = ['excluido', 'pontoAnterior']
+    list_display = ['valor', 'quando', 'nome_local', 'nome_tipo', 'nome_conta', 'diferenca', 'diferencaPercentual', 'observacoes', 'ativo']
+    list_filter = [StatusFilter, 'conta__rendimento', 'conta__local', 'conta__tipo', 'conta__nome', 'quando']
+    search_fields = ['quando', 'valor', 'observacoes']
+    exclude = ['excluido']
     
     def save_model(self, request, obj, form, change):
-        # FIXME setar o usuario_criacao apenas se for nulo
-        obj.usuario_criacao = request.user
+        if (obj.usuario_criacao is None):
+             obj.usuario_criacao = request.user
         obj.usuario_atualizacao = request.user
-        obj.pontoAnterior = None
-        p = Periodo.objects.filter(data__lt=obj.periodo.data).latest('data')
-        pa = Ponto.objects.filter(conta=obj.conta, periodo=p)
-        if (not p is None and pa.count() > 0):
-            obj.pontoAnterior = pa.first()
         obj.save()
-        queue = Queue()
-        queue.notify()
+        #queue = Queue()
+        #queue.notify()
         
     def get_queryset(self, request):
         qs = super(PontoAdmin, self).get_queryset(request)
@@ -127,14 +122,14 @@ admin.site.register(Conta, ContaAdmin)
 
 class AnaliseAdmin(admin.ModelAdmin):
     form = AnaliseForm
-    list_display = ['periodo', 'total', 'diferenca', 'diferencaPercentual', 'ativo']
+    list_display = ['quando', 'total', 'diferenca', 'diferencaPercentual', 'ativo']
     list_filter = [StatusFilter]
     search_fields = ['observacoes']
     exclude = ['excluido']
     
     def save_model(self, request, obj, form, change):
-        # FIXME setar o usuario_criacao apenas se for nulo
-        obj.usuario_criacao = request.user
+        if (obj.usuario_criacao is None):
+             obj.usuario_criacao = request.user
         obj.usuario_atualizacao = request.user
         obj.save()
 
@@ -146,14 +141,15 @@ admin.site.register(Analise, AnaliseAdmin)
 
 class AnalisePorPeriodoAdmin(admin.ModelAdmin):
     form = AnalisePorPeriodoForm
-    list_display = ['periodo', 'diferenca', 'rendimento', 'resultado', 'resultadoPercentual', 'observacoes', 'ativo']
+    list_display = ['quando', 'diferenca', 'rendimento', 'resultado', 'resultadoPercentual', 'observacoes', 'ativo']
     list_filter = [StatusFilter]
     search_fields = ['observacoes']
     exclude = ['excluido']
     
     def save_model(self, request, obj, form, change):
         # FIXME setar o usuario_criacao apenas se for nulo
-        obj.usuario_criacao = request.user
+        if (obj.usuario_criacao is None):
+            obj.usuario_criacao = request.user
         obj.usuario_atualizacao = request.user
         obj.save()
 

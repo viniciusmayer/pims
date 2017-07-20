@@ -53,12 +53,10 @@ class Ponto(CommonInfo):
     valor = models.DecimalField(max_digits=9, decimal_places=2)
     quando = models.DateField()
 
-    periodo = models.ForeignKey(Periodo)
-    pontoAnterior = models.ForeignKey('self', null=True, blank=True, on_delete=models.SET_NULL)
     conta = models.ForeignKey(Conta)
     
     class Meta:
-        ordering = ['-ativo', '-periodo__data', '-data_hora_atualizacao', '-data_hora_criacao']
+        ordering = ['-ativo', '-quando', '-data_hora_atualizacao', '-data_hora_criacao']
         
     def nome_conta(self):
         return self.conta.nome
@@ -76,7 +74,7 @@ class Ponto(CommonInfo):
     #FIXME working here
     def diferenca(self):
         _diferenca = None
-        _pontoAnterior = Ponto.objects.filter(periodo__data__lt=self.quando).order_by('-periodo__data').first()
+        _pontoAnterior = Ponto.objects.filter(quando__lt=self.quando).order_by('-quando').first()
         if (not _pontoAnterior is None):
             _diferenca = self.valor - _pontoAnterior.valor
             movimentos = Movimento.objects.filter(ponto=self)
@@ -90,13 +88,15 @@ class Ponto(CommonInfo):
     
     #TODO testar 2º
     def diferencaPercentual(self):
-        if (not self.pontoAnterior is None):
-            return round(((self.diferenca() / Decimal(self.pontoAnterior.valor)) * 100), 2)
-        return None
+        _diferencaPercentual = None
+        _pontoAnterior = Ponto.objects.filter(quando__lt=self.quando).order_by('-quando').first()
+        if (not _pontoAnterior is None):
+            _diferencaPercentual = round(((self.diferenca() / Decimal(_pontoAnterior.valor)) * 100), 2)
+        return _diferencaPercentual
     diferencaPercentual.short_description = 'diferenca percentual'
     
     def __str__(self):
-        return '%s - %s - %s - %s' % (self.periodo.data, self.nome_local(), self.nome_tipo(), self.nome_conta())
+        return '%s - %s - %s - %s' % (self.quando, self.nome_local(), self.nome_tipo(), self.nome_conta())
 
 class Movimento(CommonInfo):
     OPERACAO = (
@@ -109,7 +109,7 @@ class Movimento(CommonInfo):
     ponto = models.ForeignKey(Ponto)
     
     class Meta:
-        ordering = ['-ativo', '-ponto__periodo__data', '-data_hora_atualizacao', '-data_hora_criacao']
+        ordering = ['-ativo', '-ponto__quando', '-data_hora_atualizacao', '-data_hora_criacao']
     
     def __str__(self):
         if (self.operacao is 'DE'):
@@ -117,7 +117,7 @@ class Movimento(CommonInfo):
         return '{0} {1}'.format(self.valor, self.ponto)
 
     def periodo(self):
-        return self.ponto.periodo
+        return self.quando
 
     def nome_conta(self):
         return self.ponto.nome_conta()
@@ -132,45 +132,45 @@ class Movimento(CommonInfo):
     nome_tipo.short_description = 'Tipo'
     
 class Analise(CommonInfo):
-    periodo = models.ForeignKey(Periodo)
+    quando = models.DateField() 
     total = models.DecimalField(max_digits=9, decimal_places=2, null=True)
 
     class Meta:
-        ordering = ['-ativo', '-periodo__data', '-data_hora_atualizacao', '-data_hora_criacao']
+        ordering = ['-ativo', '-quando', '-data_hora_atualizacao', '-data_hora_criacao']
         
     #TODO testar
     def diferenca(self):
-        _analiseAnterior = Analise.objects.filter(periodo = self.periodo.periodoAnterior).first()
+        _analiseAnterior = Analise.objects.filter(quando__lt=self.quando).order_by('-quando').first()
         if (not _analiseAnterior is None):
             return self.total - _analiseAnterior.total
         return None
     
     #TODO testar
     def diferencaPercentual(self):
-        _analiseAnterior = Analise.objects.filter(periodo = self.periodo.periodoAnterior).first()
+        _analiseAnterior = Analise.objects.filter(quando__lt=self.quando).order_by('-quando').first()
         if (not _analiseAnterior is None):
             return round(((self.diferenca() / _analiseAnterior.total) * 100), 2)
         return None
     diferencaPercentual.short_description = 'diferenca percentual'
     
     def __str__(self):
-        return str(self.periodo.data)
+        return str(self.quando)
     
 class AnalisePorPeriodo(CommonInfo):
-    periodo = models.ForeignKey(Periodo)
+    quando = models.DateField()
 
     class Meta:
-        ordering = ['-ativo', '-periodo__data', '-data_hora_atualizacao', '-data_hora_criacao']
+        ordering = ['-ativo', '-quando', '-data_hora_atualizacao', '-data_hora_criacao']
         verbose_name_plural = 'analises por periodo'
 
     #TODO testar
     def diferenca(self):
-        analise = Analise.objects.get(periodo__data = self.periodo.data)
+        analise = Analise.objects.get(quando = self.quando)
         return analise.diferenca()
 
     #TODO testar
     def rendimento(self):
-        rendimento = RendimentoPorPeriodo.objects.get(periodo__data = self.periodo.data)
+        rendimento = RendimentoPorPeriodo.objects.get(periodo__data = self.quando)
         return rendimento.total
     
     #TODO testar
@@ -193,7 +193,7 @@ class AnalisePorPeriodo(CommonInfo):
     resultadoPercentual.short_description = 'resultado percentual'
 
     def __str__(self):
-        return str(self.periodo.data)
+        return str(self.quando)
 
 class Rendimento(CommonInfo):
     conta = models.ForeignKey(Conta, related_name='rendimento_conta')
@@ -269,7 +269,7 @@ class RendimentoPorPeriodo(CommonInfo):
 
     #TODO testar
     def vezes(self):
-        pontos = Ponto.objects.filter(periodo__data=self.periodo.data, conta__rendimento=True)
+        pontos = Ponto.objects.filter(quando=self.periodo.data, conta__rendimento=True)
         count = None
         for ponto in pontos:
             diferenca = ponto.diferenca()
