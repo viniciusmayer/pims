@@ -39,16 +39,6 @@ class Conta(CommonInfo):
     def __str__(self):
         return '%s - %s - %s' % (self.local.nome, self.tipo.nome, self.nome)
     
-class Periodo(CommonInfo):
-    data = models.DateField(default=timezone.now)
-    periodoAnterior = models.ForeignKey('self', null=True, blank=True, on_delete=models.SET_NULL)
-    
-    class Meta:
-        ordering = ['-ativo', '-data', '-data_hora_atualizacao', '-data_hora_criacao']
-
-    def __str__(self):
-        return str(self.data)    
-    
 class Ponto(CommonInfo):
     valor = models.DecimalField(max_digits=9, decimal_places=2)
     quando = models.DateField()
@@ -71,7 +61,6 @@ class Ponto(CommonInfo):
     nome_tipo.short_description = 'Tipo'
 
     #TODO testar 1º
-    #FIXME working here
     def diferenca(self):
         _diferenca = None
         _pontoAnterior = Ponto.objects.filter(quando__lt=self.quando).order_by('-quando').first()
@@ -117,7 +106,7 @@ class Movimento(CommonInfo):
         return '{0} {1}'.format(self.valor, self.ponto)
 
     def periodo(self):
-        return self.quando
+        return self.ponto.quando
 
     def nome_conta(self):
         return self.ponto.nome_conta()
@@ -170,7 +159,7 @@ class AnalisePorPeriodo(CommonInfo):
 
     #TODO testar
     def rendimento(self):
-        rendimento = RendimentoPorPeriodo.objects.get(periodo__data = self.quando)
+        rendimento = RendimentoPorPeriodo.objects.get(quando = self.quando)
         return rendimento.total
     
     #TODO testar
@@ -260,16 +249,16 @@ class Rendimento(CommonInfo):
     mediaPercentual.short_description = 'media percentual'
 
 class RendimentoPorPeriodo(CommonInfo):
-    periodo = models.ForeignKey(Periodo)
+    quando = models.DateField()
     total = models.DecimalField(max_digits=9, decimal_places=2, null=True)
             
     class Meta:
-        ordering = ['-ativo', '-periodo__data', '-data_hora_atualizacao', '-data_hora_criacao']
+        ordering = ['-ativo', '-quando', '-data_hora_atualizacao', '-data_hora_criacao']
         verbose_name_plural = 'rendimentos por periodo'
 
     #TODO testar
     def vezes(self):
-        pontos = Ponto.objects.filter(quando=self.periodo.data, conta__rendimento=True)
+        pontos = Ponto.objects.filter(quando=self.quando, conta__rendimento=True)
         count = None
         for ponto in pontos:
             diferenca = ponto.diferenca()

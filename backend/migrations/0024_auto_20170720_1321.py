@@ -37,11 +37,3 @@ class Migration(migrations.Migration):
             field=models.DateField(),
         ),
     ]
-'''
-        migrations.AddField(
-            model_name='analiseporperiodo',
-            name='quando',
-            field=models.DateField(default=999),
-            preserve_default=False,
-        ),
-'''
