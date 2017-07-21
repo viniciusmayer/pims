@@ -66,7 +66,8 @@ class Ponto(CommonInfo):
         _pontoAnterior = Ponto.objects.filter(quando__lt=self.quando).order_by('-quando').first()
         if (not _pontoAnterior is None):
             _diferenca = self.valor - _pontoAnterior.valor
-            movimentos = Movimento.objects.filter(ponto=self)
+            #FIXME Movimento.ponto -> Movimento.conta&quando: consultar movimentos entre duas datas 
+            movimentos = Movimento.objects.filter(quando=self.quando, conta=self.conta)
             for movimento in movimentos:
                 # FIXME transformar numa Enum
                 if (movimento.operacao == 'CR'):
@@ -94,30 +95,31 @@ class Movimento(CommonInfo):
     )
     operacao = models.CharField(max_length=2, choices=OPERACAO)
     valor = models.DecimalField(max_digits=9, decimal_places=2)
-    
-    ponto = models.ForeignKey(Ponto)
+    quando = models.DateField()
+
+    conta = models.ForeignKey(Conta)
     
     class Meta:
-        ordering = ['-ativo', '-ponto__quando', '-data_hora_atualizacao', '-data_hora_criacao']
+        ordering = ['-ativo', '-quando', '-data_hora_atualizacao', '-data_hora_criacao']
     
     def __str__(self):
         if (self.operacao is 'DE'):
-            return '{0}{1} {2}'.format('-', self.valor, self.ponto)
-        return '{0} {1}'.format(self.valor, self.ponto)
+            return '{0}{1} {2}'.format('-', self.valor, self.quando)
+        return '{0} {1}'.format(self.valor, self.quando)
 
     def periodo(self):
-        return self.ponto.quando
+        return self.quando
 
     def nome_conta(self):
-        return self.ponto.nome_conta()
+        return self.conta.nome
     nome_conta.short_description = 'Conta'
     
     def nome_local(self):
-        return self.ponto.nome_local()
+        return self.conta.local.nome
     nome_local.short_description = 'Local'
     
     def nome_tipo(self):
-        return self.ponto.nome_tipo()
+        return self.conta.tipo.nome
     nome_tipo.short_description = 'Tipo'
     
 class Analise(CommonInfo):
@@ -168,8 +170,8 @@ class AnalisePorPeriodo(CommonInfo):
         diferenca = self.diferenca()
         total = self.rendimento()
         if ((not diferenca is None) and (not total is None)):
-            resultado = diferenca - Decimal(total)
-        return round(resultado, 2)
+            resultado = round(diferenca - Decimal(total), 2)
+        return resultado
 
     #TODO testar
     def resultadoPercentual(self):

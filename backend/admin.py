@@ -18,8 +18,7 @@ class PontoAdmin(admin.ModelAdmin):
     exclude = ['excluido']
     
     def save_model(self, request, obj, form, change):
-        if (obj.usuario_criacao is None):
-            obj.usuario_criacao = request.user
+        obj.usuario_criacao = request.user
         obj.usuario_atualizacao = request.user
         obj.save()
         #queue = Queue()
@@ -53,8 +52,7 @@ class TipoAdmin(admin.ModelAdmin):
     exclude = ['excluido']
     
     def save_model(self, request, obj, form, change):
-        if (obj.usuario_criacao is None):
-            obj.usuario_criacao = request.user
+        obj.usuario_criacao = request.user
         obj.usuario_atualizacao = request.user
         obj.save()
 
@@ -72,8 +70,7 @@ class LocalAdmin(admin.ModelAdmin):
     exclude = ['excluido']
     
     def save_model(self, request, obj, form, change):
-        if (obj.usuario_criacao is None):
-            obj.usuario_criacao = request.user
+        obj.usuario_criacao = request.user
         obj.usuario_atualizacao = request.user
         obj.save()
 
@@ -91,8 +88,7 @@ class ContaAdmin(admin.ModelAdmin):
     exclude = ['excluido']
     
     def save_model(self, request, obj, form, change):
-        if (obj.usuario_criacao is None):
-            obj.usuario_criacao = request.user
+        obj.usuario_criacao = request.user
         obj.usuario_atualizacao = request.user
         obj.save()
 
@@ -128,8 +124,7 @@ class AnaliseAdmin(admin.ModelAdmin):
     exclude = ['excluido']
     
     def save_model(self, request, obj, form, change):
-        if (obj.usuario_criacao is None):
-            obj.usuario_criacao = request.user
+        obj.usuario_criacao = request.user
         obj.usuario_atualizacao = request.user
         obj.save()
 
@@ -147,8 +142,7 @@ class AnalisePorPeriodoAdmin(admin.ModelAdmin):
     exclude = ['excluido']
     
     def save_model(self, request, obj, form, change):
-        if (obj.usuario_criacao is None):
-            obj.usuario_criacao = request.user
+        obj.usuario_criacao = request.user
         obj.usuario_atualizacao = request.user
         obj.save()
 
@@ -161,17 +155,16 @@ admin.site.register(AnalisePorPeriodo, AnalisePorPeriodoAdmin)
 class MovimentoAdmin(admin.ModelAdmin):
     form = MovimentoForm
     list_display = ['operacao', 'valor', 'periodo', 'nome_local', 'nome_tipo', 'nome_conta', 'observacoes', 'ativo']
-    list_filter = [StatusFilter, 'operacao', 'ponto__conta__local', 'ponto__conta__tipo', 'ponto__conta__nome']
+    list_filter = [StatusFilter, 'operacao', 'conta__local', 'conta__tipo', 'conta__nome']
     search_fields = ['observacoes']
     exclude = ['excluido']
     
     def save_model(self, request, obj, form, change):
-        if (obj.usuario_criacao is None):
-            obj.usuario_criacao = request.user
+        obj.usuario_criacao = request.user
         obj.usuario_atualizacao = request.user
         obj.save()
-        queue = Queue()
-        queue.notify()
+        #queue = Queue()
+        #queue.notify()
 
     def get_queryset(self, request):
         qs = super(MovimentoAdmin, self).get_queryset(request)
@@ -187,8 +180,7 @@ class RendimentoAdmin(admin.ModelAdmin):
     exclude = ['excluido']
     
     def save_model(self, request, obj, form, change):
-        if (obj.usuario_criacao is None):
-            obj.usuario_criacao = request.user
+        obj.usuario_criacao = request.user
         obj.usuario_atualizacao = request.user
         obj.save()
 
@@ -206,8 +198,7 @@ class RendimentoPorPeriodoAdmin(admin.ModelAdmin):
     exclude = ['excluido']
     
     def save_model(self, request, obj, form, change):
-        if (obj.usuario_criacao is None):
-            obj.usuario_criacao = request.user
+        obj.usuario_criacao = request.user
         obj.usuario_atualizacao = request.user
         obj.save()
 
@@ -225,8 +216,7 @@ class ConfiguracaoAdmin(admin.ModelAdmin):
     exclude = ['excluido']
     
     def save_model(self, request, obj, form, change):
-        if (obj.usuario_criacao is None):
-            obj.usuario_criacao = request.user
+        obj.usuario_criacao = request.user
         obj.usuario_atualizacao = request.user
         obj.save()
     
