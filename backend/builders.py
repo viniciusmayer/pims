@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User
 import uuid
 
-from backend.models import Ponto, Periodo, Conta, Local, Tipo, Movimento
+from backend.models import Ponto, Conta, Local, Tipo, Movimento
 
 
 class UsuarioBuilder():
@@ -25,15 +25,6 @@ class PontoBuilder():
             valor=valor,
             quando=quando,
             conta=conta,
-            usuario_criacao=UsuarioBuilder.sessionUser(),
-            usuario_atualizacao=UsuarioBuilder.sessionUser(),)
-
-class PeriodoBuilder():
-    @staticmethod
-    def create(data, periodoAnterior=None):
-        return Periodo.objects.create(
-            data=data,
-            periodoAnterior=periodoAnterior,
             usuario_criacao=UsuarioBuilder.sessionUser(),
             usuario_atualizacao=UsuarioBuilder.sessionUser(),)
 

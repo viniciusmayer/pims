@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 from decimal import Decimal
 from django.db import models
-from django.utils import timezone
 from enum import Enum
 
 from common.models import CommonInfo
@@ -47,19 +46,10 @@ class Ponto(CommonInfo):
     
     class Meta:
         ordering = ['-ativo', '-quando', '-data_hora_atualizacao', '-data_hora_criacao']
+    
+    def __str__(self):
+        return '%s - %s - %s - %s' % (self.quando, self.nome_local(), self.nome_tipo(), self.nome_conta())
         
-    def nome_conta(self):
-        return self.conta.nome
-    nome_conta.short_description = 'Conta'
-    
-    def nome_local(self):
-        return self.conta.local.nome
-    nome_local.short_description = 'Local'
-    
-    def nome_tipo(self):
-        return self.conta.tipo.nome
-    nome_tipo.short_description = 'Tipo'
-
     #TODO testar 1º
     def diferenca(self):
         _diferenca = None
@@ -69,11 +59,7 @@ class Ponto(CommonInfo):
             #FIXME Movimento.ponto -> Movimento.conta&quando: consultar movimentos entre duas datas 
             movimentos = Movimento.objects.filter(quando=self.quando, conta=self.conta)
             for movimento in movimentos:
-                # FIXME transformar numa Enum
-                if (movimento.operacao == 'CR'):
-                    _diferenca -= movimento.valor
-                elif (movimento.operacao == 'DE'):
-                    _diferenca += movimento.valor
+                _diferenca += movimento.valor
         return _diferenca
     
     #TODO testar 2º
@@ -84,16 +70,8 @@ class Ponto(CommonInfo):
             _diferencaPercentual = round(((self.diferenca() / Decimal(_pontoAnterior.valor)) * 100), 2)
         return _diferencaPercentual
     diferencaPercentual.short_description = 'diferenca percentual'
-    
-    def __str__(self):
-        return '%s - %s - %s - %s' % (self.quando, self.nome_local(), self.nome_tipo(), self.nome_conta())
 
 class Movimento(CommonInfo):
-    OPERACAO = (
-        ('DE', 'Debito'),
-        ('CR', 'Credito'),
-    )
-    operacao = models.CharField(max_length=2, choices=OPERACAO)
     valor = models.DecimalField(max_digits=9, decimal_places=2)
     quando = models.DateField()
 
@@ -107,27 +85,15 @@ class Movimento(CommonInfo):
             return '{0}{1} {2}'.format('-', self.valor, self.quando)
         return '{0} {1}'.format(self.valor, self.quando)
 
-    def periodo(self):
-        return self.quando
-
-    def nome_conta(self):
-        return self.conta.nome
-    nome_conta.short_description = 'Conta'
-    
-    def nome_local(self):
-        return self.conta.local.nome
-    nome_local.short_description = 'Local'
-    
-    def nome_tipo(self):
-        return self.conta.tipo.nome
-    nome_tipo.short_description = 'Tipo'
-    
 class Analise(CommonInfo):
     quando = models.DateField() 
     total = models.DecimalField(max_digits=9, decimal_places=2, null=True)
 
     class Meta:
         ordering = ['-ativo', '-quando', '-data_hora_atualizacao', '-data_hora_criacao']
+    
+    def __str__(self):
+        return str(self.quando)
         
     #TODO testar
     def diferenca(self):
@@ -144,15 +110,15 @@ class Analise(CommonInfo):
         return None
     diferencaPercentual.short_description = 'diferenca percentual'
     
-    def __str__(self):
-        return str(self.quando)
-    
 class AnalisePorPeriodo(CommonInfo):
     quando = models.DateField()
 
     class Meta:
         ordering = ['-ativo', '-quando', '-data_hora_atualizacao', '-data_hora_criacao']
         verbose_name_plural = 'analises por periodo'
+
+    def __str__(self):
+        return str(self.quando)
 
     #TODO testar
     def diferenca(self):
@@ -183,26 +149,11 @@ class AnalisePorPeriodo(CommonInfo):
         return resultado
     resultadoPercentual.short_description = 'resultado percentual'
 
-    def __str__(self):
-        return str(self.quando)
-
 class Rendimento(CommonInfo):
     conta = models.ForeignKey(Conta, related_name='rendimento_conta')
         
     class Meta:
         ordering = ['-ativo', '-data_hora_atualizacao', '-data_hora_criacao']
-
-    def nome_conta(self):
-        return self.conta.nome
-    nome_conta.short_description = 'Conta'
-    
-    def nome_local(self):
-        return self.conta.local.nome
-    nome_local.short_description = 'Local'
-    
-    def nome_tipo(self):
-        return self.conta.tipo.nome
-    nome_tipo.short_description = 'Tipo'
 
     #TODO testar
     def total(self):

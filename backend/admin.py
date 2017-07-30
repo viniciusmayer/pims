@@ -17,6 +17,18 @@ class PontoAdmin(admin.ModelAdmin):
     search_fields = ['quando', 'valor', 'observacoes']
     exclude = ['excluido']
     
+    def nome_conta(self, obj):
+        return obj.conta.nome
+    nome_conta.short_description = 'Conta'
+    
+    def nome_local(self, obj):
+        return obj.conta.local.nome
+    nome_local.short_description = 'Local'
+    
+    def nome_tipo(self, obj):
+        return obj.conta.tipo.nome
+    nome_tipo.short_description = 'Tipo'
+    
     def save_model(self, request, obj, form, change):
         obj.usuario_criacao = request.user
         obj.usuario_atualizacao = request.user
@@ -154,10 +166,22 @@ admin.site.register(AnalisePorPeriodo, AnalisePorPeriodoAdmin)
 
 class MovimentoAdmin(admin.ModelAdmin):
     form = MovimentoForm
-    list_display = ['operacao', 'valor', 'periodo', 'nome_local', 'nome_tipo', 'nome_conta', 'observacoes', 'ativo']
-    list_filter = [StatusFilter, 'operacao', 'conta__local', 'conta__tipo', 'conta__nome']
+    list_display = ['valor', 'quando', 'nome_local', 'nome_tipo', 'nome_conta', 'observacoes', 'ativo']
+    list_filter = [StatusFilter, 'conta__local', 'conta__tipo', 'conta__nome']
     search_fields = ['observacoes']
     exclude = ['excluido']
+    
+    def nome_conta(self, obj):
+        return obj.conta.nome
+    nome_conta.short_description = 'Conta'
+    
+    def nome_local(self, obj):
+        return obj.conta.local.nome
+    nome_local.short_description = 'Local'
+    
+    def nome_tipo(self, obj):
+        return obj.conta.tipo.nome
+    nome_tipo.short_description = 'Tipo'
     
     def save_model(self, request, obj, form, change):
         obj.usuario_criacao = request.user
@@ -178,6 +202,18 @@ class RendimentoAdmin(admin.ModelAdmin):
     list_filter = [StatusFilter, 'conta__local', 'conta__tipo']
     search_fields = ['observacoes']
     exclude = ['excluido']
+    
+    def nome_conta(self, obj):
+        return obj.conta.nome
+    nome_conta.short_description = 'Conta'
+    
+    def nome_local(self, obj):
+        return obj.conta.local.nome
+    nome_local.short_description = 'Local'
+    
+    def nome_tipo(self, obj):
+        return obj.conta.tipo.nome
+    nome_tipo.short_description = 'Tipo'
     
     def save_model(self, request, obj, form, change):
         obj.usuario_criacao = request.user

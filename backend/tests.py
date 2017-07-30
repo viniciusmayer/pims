@@ -2,7 +2,7 @@ from datetime import datetime
 import unittest
 import uuid
 
-from backend.builders import PontoBuilder, PeriodoBuilder, ContaBuilder, MovimentoBuilder
+from backend.builders import PontoBuilder, ContaBuilder, MovimentoBuilder
 
 
 class UUIDGenerator():
