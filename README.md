@@ -1,34 +1,25 @@
-# Project setup
+# Setup
+## Docker
 ```
-	wget https://bootstrap.pypa.io/get-pip.py
-	python get-pip.py
-	sudo pip install -U pip
-	git clone <url>
-	virtualenv pims
-	cd pims
-	source bin/activate
-	pip install django
-	pip install psycopg2
-	pip install pika
-	pip install coverage
-
-	python manage.py migrate
-	python manage.py createsuperuser
-	python manage.py runserver
+    ref: [Install Docker Engine on Ubuntu](https://docs.docker.com/engine/install/ubuntu/)
+    sudo apt-get install apt-transport-https ca-certificates curl gnupg-agent software-properties-common
+    curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+    sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu eoan stable"
+    sudo apt-get install docker-ce docker-ce-cli containerd.io
 ```
 
-# Run
-
+## Postgres
+* install
 ```
-	cd pims
-	source bin/activate
-	python manage.py runserver
+    sudo apt install docker-compose
+    sudo groupadd docker
+    sudo usermod -aG docker $USER
+    newgrp docker
+    sudo systemctl enable docker
+    docker-compose -f postgres.yml up
 ```
 
-
-# Database setup
-
-* Create user
+* create user
 
 ```
 CREATE USER pims WITH
@@ -39,10 +30,10 @@ CREATE USER pims WITH
 	INHERIT
 	NOREPLICATION
 	CONNECTION LIMIT -1
-	PASSWORD 'viniciusmayer';
+	PASSWORD 'p1m5';
 ```
 
-* Create database
+* create database
 
 ```
 CREATE DATABASE pims
@@ -52,8 +43,52 @@ CREATE DATABASE pims
     CONNECTION LIMIT = -1;
 ```
 
-# PGAdmin 4 - On *Unix
+* or alter database owner 
 
+```
+ALTER DATABASE pims OWNER TO pims;
+```
+
+## Project
+* install pip and virtualenv
+```
+    wget https://bootstrap.pypa.io/get-pip.py
+    python3 get-pip.py
+    sudo pip install -U pip
+    sudo pip install virtualenv
+```
+
+* project setup
+
+```
+	git clone <url>
+	virtualenv pims
+	cd pims
+	source bin/activate
+	pip install django
+	pip install psycopg2
+	pip install pika
+	pip install coverage
+```
+
+* database setup
+
+```
+    python3 manage.py makemigrations
+	python3 manage.py migrate
+	python3 manage.py createsuperuser
+	python3 manage.py runserver
+```
+
+* run
+
+```
+	cd pims
+	source bin/activate
+	python3 manage.py runserver
+```
+
+# PGAdmin 4 - On *Unix
 ```
 	sudo apt-get install python-dev
 	sudo pip install https://ftp.postgresql.org/pub/pgadmin/pgadmin4/v1.5/pip/pgadmin4-1.5-py2.py3-none-any.whl
