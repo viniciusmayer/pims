@@ -66,7 +66,7 @@ ALTER DATABASE pims OWNER TO pims;
 	cd pims
 	source bin/activate
 	pip install django
-	pip install psycopg2
+	pip install psycopg2-binary
 	pip install pika
 	pip install coverage
 ```
