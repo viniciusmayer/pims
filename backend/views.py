@@ -1,9 +1,9 @@
+from backend.serializers import PontoSerializer
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from backend.models import Ponto
-from backend.serializers import PontoSerializer
 
 
 class PontoView(APIView):
@@ -11,7 +11,7 @@ class PontoView(APIView):
         pontos = Ponto.objects.all()
         serializer = PontoSerializer(pontos, many=True)
         return Response(serializer.data)
-    
+
     def post(self, request, format=None):
         serializer = PontoSerializer(data=request.DATA)
         if serializer.is_valid():
