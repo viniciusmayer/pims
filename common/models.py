@@ -8,15 +8,30 @@ class CommonInfo(models.Model):
     ativo = models.BooleanField(default=True)
     excluido = models.BooleanField(default=False)
 
-    data_hora_criacao = models.DateTimeField(auto_now_add=True, editable=False, blank=True)
-    usuario_criacao = models.ForeignKey(User, on_delete=models.PROTECT, editable=False, blank=False,
-                                        related_name="%(app_label)s_%(class)s_criacao_related")
-    data_hora_atualizacao = models.DateTimeField(auto_now=True, editable=False, blank=True)
-    usuario_atualizacao = models.ForeignKey(User, on_delete=models.PROTECT, editable=False, blank=False,
-                                            related_name="%(app_label)s_%(class)s_atualizacao_related")
+    data_hora_criacao = models.DateTimeField(
+        auto_now_add=True, editable=False, blank=True
+    )
+    usuario_criacao = models.ForeignKey(
+        User,
+        on_delete=models.PROTECT,
+        editable=False,
+        blank=False,
+        related_name="%(app_label)s_%(class)s_criacao_related",
+    )
+    data_hora_atualizacao = models.DateTimeField(
+        auto_now=True, editable=False, blank=True
+    )
+    usuario_atualizacao = models.ForeignKey(
+        User,
+        on_delete=models.PROTECT,
+        editable=False,
+        blank=False,
+        related_name="%(app_label)s_%(class)s_atualizacao_related",
+    )
 
     class Meta:
         abstract = True
+        ordering = ["-ativo", "nome", "-data_hora_atualizacao", "-data_hora_criacao"]
 
     def delete(self, using=None):
         self.excluido = True

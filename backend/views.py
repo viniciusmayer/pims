@@ -3,12 +3,12 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from backend.models import Ponto
+from backend.models import Registro
 
 
 class PontoView(APIView):
     def get(self, request, format=None):
-        pontos = Ponto.objects.all()
+        pontos = Registro.objects.all()
         serializer = PontoSerializer(pontos, many=True)
         return Response(serializer.data)
 

@@ -1,5 +1,7 @@
 # Setup
+
 ## Docker
+
 ```
     ref: [Install Docker Engine on Ubuntu](https://docs.docker.com/engine/install/ubuntu/)
     sudo apt-get install apt-transport-https ca-certificates curl gnupg-agent software-properties-common
@@ -9,7 +11,9 @@
 ```
 
 ## Postgres
+
 * install
+
 ```
     sudo apt install docker-compose
     sudo groupadd docker
@@ -43,14 +47,16 @@ CREATE DATABASE pims
     CONNECTION LIMIT = -1;
 ```
 
-* or alter database owner 
+* or alter database owner
 
 ```
 ALTER DATABASE pims OWNER TO pims;
 ```
 
 ## Project
+
 * install pip and virtualenv
+
 ```
     wget https://bootstrap.pypa.io/get-pip.py
     python3 get-pip.py
@@ -89,11 +95,13 @@ ALTER DATABASE pims OWNER TO pims;
 ```
 
 # PGAdmin 4 - On *Unix
+
 ```
 	sudo apt-get install python-dev
 	sudo pip install https://ftp.postgresql.org/pub/pgadmin/pgadmin4/v1.5/pip/pgadmin4-1.5-py2.py3-none-any.whl
 ```
 
 # References
+
 * Djanto-AMQP: http://pika.readthedocs.io/en/stable/
 * Django-PostgreSQL: http://initd.org/psycopg/docs/install.html
